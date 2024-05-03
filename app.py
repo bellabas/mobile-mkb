@@ -35,18 +35,22 @@ def move_mouse():
 
 @app.post("/type-character")
 def type_character():
-    char = request.args.get('char', type=str)
-    return
+    try:
+        character = request.form.get("character", type=str)
+        pyautogui.write(character)
+    except ValueError:
+        return "Bad request"
+    return "Ok"
 
 
 @app.post("/click")
-def send_click():
-    return
-
-
-@app.get("/click")
 def click_response():
-    return
+    try:
+        button = request.form.get("click", type=str)
+        pyautogui.click(button=button)
+    except ValueError:
+        return "Bad request"
+    return "Ok"
 
 
 if __name__ == "__main__":

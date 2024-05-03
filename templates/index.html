@@ -12,6 +12,13 @@
     <div id="touchpad"></div>
     <input type="text" name="keyboard" id="keyboard">
 
+    <div id="ip-address"></div>
+
+    <script>
+        const ipAddress = {{ IP_ADDRESS| tojson }}
+        const port = {{ PORT| tojson }}
+        document.getElementById("ip-address").innerText = `${ipAddress}:${port}`
+    </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 
