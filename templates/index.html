@@ -4,22 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Mobile MKB</title>
 </head>
 
 <body>
     <div id="touchpad"></div>
     <input type="text" name="keyboard" id="keyboard">
-    <script>
-        //const IP_ADDRESS = {{ ip_address| tojson }}
-        //const PORT = {{ port| tojson }}
 
-        function moveMouse(x, y) {
-            const endpoint = `/move-mouse?x=${x}&y=${y}`
-            fetch(endpoint)
-        }
-        moveMouse(0, 0)
-    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 
 </html>
