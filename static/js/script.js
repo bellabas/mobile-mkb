@@ -35,3 +35,5 @@ const postClick = function (button) {
     })
 }
 
+let keyboard = document.getElementById("keyboard")
+let touchpad = document.getElementById("touchpad")
