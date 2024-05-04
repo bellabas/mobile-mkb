@@ -4,41 +4,57 @@ body {
     height: 100%;
 }
 
-#keyboard {
+#keyboard-container {
     position: fixed;
     top: 2%;
     left: 25%;
     width: 50%;
     height: 5%;
     z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#keyboard-input {
+    position: relative;
+    height: 100%;
+    width: 100%;
     border-radius: 25px;
-    border: 0px;
+    border: 1px solid black;
     padding: 0px;
     text-align: center;
     background-color: #808080;
     color: transparent;
+    z-index: 2;
 }
 
-#keyboard:focus {
+#keyboard-input:focus {
     outline: none;
-    border: 1px solid ghostwhite;
+    border: 2px solid black;
+    background-color: #696969;
 }
 
-#keyboard:hover {
+#keyboard-input:hover {
     cursor: default;
 }
 
-#keyboard-overlay-container {
-    position: fixed;
-    top: 2%;
-    left: 25%;
-    width: 50%;
-    height: 5%;
-    z-index: 2;
+#keyboard-overlay-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: none;
+    text-align: center;
+}
+
+#keyboard-input:focus+#keyboard-overlay-text {
+    font-weight: bold;
 }
 
 #touchpad {
