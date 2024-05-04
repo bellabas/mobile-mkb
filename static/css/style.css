@@ -1,25 +1,50 @@
+html,
 body {
     margin: 0;
+    height: 100%;
 }
 
 #keyboard {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: 2%;
+    left: 25%;
+    width: 50%;
+    height: 5%;
+    z-index: 1;
+    border-radius: 25px;
+    border: 0px;
+    padding: 0px;
+    text-align: center;
+    background-color: #808080;
+    color: transparent;
+}
+
+#keyboard:focus {
+    outline: none;
+    border: 1px solid ghostwhite;
+}
+
+#keyboard:hover {
+    cursor: default;
+}
+
+#keyboard-overlay-container {
+    position: fixed;
+    top: 2%;
+    left: 25%;
+    width: 50%;
     height: 5%;
     z-index: 2;
-    background-color: #a9a9a9;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
 }
 
 #touchpad {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    background-color: #808080;
+    background-color: #a9a9a9;
 }
 
 #ip-address {
