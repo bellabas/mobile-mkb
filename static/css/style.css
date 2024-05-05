@@ -27,6 +27,10 @@ body {
     background-color: #808080;
     color: transparent;
     z-index: 2;
+
+    /* user-select: none;
+    text-decoration: none;
+    cursor: default; */
 }
 
 #keyboard-input:focus {
@@ -34,10 +38,7 @@ body {
     box-shadow: none;
     border: 2px solid black;
     background-color: #696969;
-}
-
-#keyboard-input:hover {
-    cursor: default;
+    /* cursor: default; */
 }
 
 #keyboard-overlay-text {

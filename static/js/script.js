@@ -35,67 +35,70 @@ const postClick = function (button) {
     });
 };
 
-const handleKeyboardInput = function (evt) {
-    if (evt.inputType == "deleteContentBackward") {
-        postTypeCharacter("backspace");
+//==========KEYBOARD==========
+
+const handleKeyDown = function (evt) {
+    //evt.preventDefault();
+    const keyboard = document.getElementById("keyboard-input");
+
+    //alert(`keydown full: ${evt.target.value}`);
+    //alert(`keydown evt.key: ${evt.key}`);
+
+    if (evt.key != "Unidentified") {
+        postTypeCharacter(evt.key);
     }
-    else if (evt.data == " ") {
-        postTypeCharacter("space");
-    }
-    else if (evt.data != "" && evt.data != null) {
-        postTypeCharacter(evt.data);
-    }
-    else {
-        postTypeCharacter("enter");
-    }
-    //document.getElementById("keyboard-input").value = "";
 };
 
-/* const handleKeydown = function (evt) {
+const handleKeyUp = function (evt) {
+    //evt.preventDefault();
     const keyboard = document.getElementById("keyboard-input");
-    if (evt.key == "Enter") {
-        postTypeCharacter("enter");
-    }
-    else if (evt.key == "Backspace") {
-        postTypeCharacter("backspace");
-    }
-    else if (evt.key == " " || evt.key == "Spacebar") {
-        postTypeCharacter("space");
-    }
-    else {
-        postTypeCharacter(keyboard.value);
-    }
-    keyboard.value = "";
-}; */
 
+    //alert(`keyup full: ${evt.target.value}`);
+    //alert(`keyup evt.key: ${evt.key}`);
+
+    // if (evt.key === "Unidentified" && evt.key != "Enter" && evt.key != "Backspace") {
+    //     const fullValue = evt.target.value;
+    //     const currChar = fullValue[fullValue.length - 1];
+    //     postTypeCharacter(currChar);
+    // }
+    // else if (evt.key != "Unidentified" && evt.key != "Enter" && evt.key != "Backspace") {
+    //     postTypeCharacter(evt.key);
+    // }
+};
+
+//==========MOUSE==========
+
+let startCoordinates = null;
 let previousCoordinates = null;
 let touchId = null;
 
 const handleStart = function (evt) {
     evt.preventDefault();
-    const touches = evt.touches;
+    const touches = evt.changedTouches;
     touchId = touches[0].identifier;
 
-    for (let i = 0; i < touches.length; i++) {
-        previousCoordinates = { x: Math.trunc(touches[i].screenX), y: Math.trunc(touches[i].screenY) };
-    }
+    previousCoordinates = { x: Math.trunc(touches[0].screenX), y: Math.trunc(touches[0].screenY) };
+    startCoordinates = previousCoordinates;
 };
 
 const handleMove = function (evt) {
-    //evt.preventDefault();
+    evt.preventDefault();
     const touches = evt.changedTouches;
 
-    for (let i = 0; i < touches.length; i++) {
-        if (touches[i].identifier === touchId) {
-            const currentCoordinates = { x: Math.trunc(touches[i].screenX), y: Math.trunc(touches[i].screenY) };
-            postMoveMouse(currentCoordinates.x - previousCoordinates.x, currentCoordinates.y - previousCoordinates.y);
-            previousCoordinates = currentCoordinates;
-        }
+    if (touches[0].identifier === touchId) {
+        const currentCoordinates = { x: Math.trunc(touches[0].screenX), y: Math.trunc(touches[0].screenY) };
+        postMoveMouse(currentCoordinates.x - previousCoordinates.x, currentCoordinates.y - previousCoordinates.y);
+        previousCoordinates = currentCoordinates;
     }
 };
 
 const handleEnd = function (evt) {
     //evt.preventDefault();
+    const touches = evt.changedTouches;
+    const endCoordinates = { x: Math.trunc(touches[0].screenX), y: Math.trunc(touches[0].screenY) };
+    if (Math.abs(startCoordinates.x - endCoordinates.x) <= 2 && Math.abs(startCoordinates.y - endCoordinates.y) <= 2) {
+        postClick("left");
+    }
     //previousCoordinates = null;
     touchId = null;
 };
@@ -106,22 +109,17 @@ const handleCancel = function (evt) {
     touchId = null;
 };
 
-/* const handleClick = function (evt) {
-    postClick("right");
-} */
-
 const startup = function () {
     const keyboard = document.getElementById("keyboard-input");
     const touchpad = document.getElementById("touchpad");
 
-    keyboard.addEventListener("input", handleKeyboardInput);
-    //keyboard.addEventListener("keydown", handleKeydown);
+    keyboard.addEventListener("keydown", handleKeyDown);
+    keyboard.addEventListener("keyup", handleKeyUp);
 
     touchpad.addEventListener("touchstart", handleStart);
     touchpad.addEventListener("touchend", handleEnd);
     touchpad.addEventListener("touchcancel", handleCancel);
     touchpad.addEventListener("touchmove", handleMove);
-    //touchpad.addEventListener("click", handleClick);
 };
 
 document.addEventListener("DOMContentLoaded", startup);

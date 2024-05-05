@@ -37,8 +37,8 @@ def type_character():
     try:
         character = request.form.get("character", type=str)
         print(character)
-        if character == "enter" or character == "backspace" or character == "space":
-            pyautogui.press(character)
+        if character == "Enter" or character == "Backspace":
+            pyautogui.press(character.lower())
         else:
             pyautogui.write(character)
     except ValueError:
