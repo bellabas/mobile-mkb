@@ -36,7 +36,11 @@ def move_mouse():
 def type_character():
     try:
         character = request.form.get("character", type=str)
-        pyautogui.write(character)
+        print(character)
+        if character == "enter" or character == "backspace" or character == "space":
+            pyautogui.press(character)
+        else:
+            pyautogui.write(character)
     except ValueError:
         return "Bad request"
     return "Ok"

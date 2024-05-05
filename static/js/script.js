@@ -35,6 +35,39 @@ const postClick = function (button) {
     });
 };
 
+const handleKeyboardInput = function (evt) {
+    if (evt.inputType == "deleteContentBackward") {
+        postTypeCharacter("backspace");
+    }
+    else if (evt.data == " ") {
+        postTypeCharacter("space");
+    }
+    else if (evt.data != "" && evt.data != null) {
+        postTypeCharacter(evt.data);
+    }
+    else {
+        postTypeCharacter("enter");
+    }
+    //document.getElementById("keyboard-input").value = "";
+};
+
+/* const handleKeydown = function (evt) {
+    const keyboard = document.getElementById("keyboard-input");
+    if (evt.key == "Enter") {
+        postTypeCharacter("enter");
+    }
+    else if (evt.key == "Backspace") {
+        postTypeCharacter("backspace");
+    }
+    else if (evt.key == " " || evt.key == "Spacebar") {
+        postTypeCharacter("space");
+    }
+    else {
+        postTypeCharacter(keyboard.value);
+    }
+    keyboard.value = "";
+}; */
+
 let previousCoordinates = null;
 let touchId = null;
 
@@ -49,7 +82,7 @@ const handleStart = function (evt) {
 };
 
 const handleMove = function (evt) {
-    evt.preventDefault();
+    //evt.preventDefault();
     const touches = evt.changedTouches;
 
     for (let i = 0; i < touches.length; i++) {
@@ -62,13 +95,13 @@ const handleMove = function (evt) {
 };
 
 const handleEnd = function (evt) {
-    evt.preventDefault();
+    //evt.preventDefault();
     //previousCoordinates = null;
     touchId = null;
 };
 
 const handleCancel = function (evt) {
-    evt.preventDefault();
+    //evt.preventDefault();
     //previousCoordinates = null;
     touchId = null;
 };
@@ -80,6 +113,9 @@ const handleCancel = function (evt) {
 const startup = function () {
     const keyboard = document.getElementById("keyboard-input");
     const touchpad = document.getElementById("touchpad");
+
+    keyboard.addEventListener("input", handleKeyboardInput);
+    //keyboard.addEventListener("keydown", handleKeydown);
 
     touchpad.addEventListener("touchstart", handleStart);
     touchpad.addEventListener("touchend", handleEnd);
