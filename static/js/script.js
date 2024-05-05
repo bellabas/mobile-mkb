@@ -35,5 +35,51 @@ const postClick = function (button) {
     })
 }
 
-let keyboard = document.getElementById("keyboard")
-let touchpad = document.getElementById("touchpad")
+
+function startup() {
+    const keyboard = document.getElementById("keyboard")
+    const touchpad = document.getElementById("touchpad")
+
+    touchpad.addEventListener("touchstart", handleStart);
+    touchpad.addEventListener("touchend", handleEnd);
+    touchpad.addEventListener("touchcancel", handleCancel);
+    touchpad.addEventListener("touchmove", handleMove);
+}
+
+document.addEventListener("DOMContentLoaded", startup);
+
+let previousCoordinates = null;
+
+function handleStart(evt) {
+    evt.preventDefault();
+    const touches = evt.changedTouches;
+
+    for (let i = 0; i < touches.length; i++) {
+        previousCoordinates = { x: Math.trunc(touches[i].clientX), y: Math.trunc(touches[i].clientY) };
+    }
+}
+
+function handleMove(evt) {
+    evt.preventDefault();
+    const touches = evt.changedTouches;
+    const id = touches[0].identifier;
+
+    for (let i = 0; i < touches.length; i++) {
+        if (touches[i].identifier === id) {
+            const currentCoordinates = { x: Math.trunc(touches[i].clientX), y: Math.trunc(touches[i].clientY) };
+            postMoveMouse(currentCoordinates.x - previousCoordinates.x, currentCoordinates.y - previousCoordinates.y);
+            previousCoordinates = currentCoordinates;
+        }
+    }
+}
+
+function handleEnd(evt) {
+    evt.preventDefault();
+    previousCoordinates = null;
+}
+
+function handleCancel(evt) {
+    evt.preventDefault();
+    previousCoordinates = null;
+}
+

@@ -26,8 +26,7 @@ def move_mouse():
     try:
         x = request.form.get("x", type=int)
         y = request.form.get("y", type=int)
-        # pyautogui.moveRel(xOffset=x, yOffset=y)
-        pyautogui.moveTo(x, y)
+        pyautogui.moveRel(xOffset=x, yOffset=y)
     except ValueError:
         return "Bad request"
     return "Ok"
