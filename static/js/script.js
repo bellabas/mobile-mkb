@@ -40,11 +40,11 @@ let touchId = null;
 
 const handleStart = function (evt) {
     evt.preventDefault();
-    const touches = evt.changedTouches;
+    const touches = evt.touches;
     touchId = touches[0].identifier;
 
     for (let i = 0; i < touches.length; i++) {
-        previousCoordinates = { x: Math.trunc(touches[i].clientX), y: Math.trunc(touches[i].clientY) };
+        previousCoordinates = { x: Math.trunc(touches[i].screenX), y: Math.trunc(touches[i].screenY) };
     }
 };
 
@@ -54,7 +54,7 @@ const handleMove = function (evt) {
 
     for (let i = 0; i < touches.length; i++) {
         if (touches[i].identifier === touchId) {
-            const currentCoordinates = { x: Math.trunc(touches[i].clientX), y: Math.trunc(touches[i].clientY) };
+            const currentCoordinates = { x: Math.trunc(touches[i].screenX), y: Math.trunc(touches[i].screenY) };
             postMoveMouse(currentCoordinates.x - previousCoordinates.x, currentCoordinates.y - previousCoordinates.y);
             previousCoordinates = currentCoordinates;
         }
@@ -63,15 +63,19 @@ const handleMove = function (evt) {
 
 const handleEnd = function (evt) {
     evt.preventDefault();
-    previousCoordinates = null;
+    //previousCoordinates = null;
     touchId = null;
 };
 
 const handleCancel = function (evt) {
     evt.preventDefault();
-    previousCoordinates = null;
+    //previousCoordinates = null;
     touchId = null;
 };
+
+/* const handleClick = function (evt) {
+    postClick("right");
+} */
 
 const startup = function () {
     const keyboard = document.getElementById("keyboard-input");
@@ -81,6 +85,7 @@ const startup = function () {
     touchpad.addEventListener("touchend", handleEnd);
     touchpad.addEventListener("touchcancel", handleCancel);
     touchpad.addEventListener("touchmove", handleMove);
+    //touchpad.addEventListener("click", handleClick);
 };
 
 document.addEventListener("DOMContentLoaded", startup);
