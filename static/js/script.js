@@ -35,6 +35,44 @@ const postClick = function (button) {
     });
 };
 
+let previousCoordinates = null;
+let touchId = null;
+
+const handleStart = function (evt) {
+    evt.preventDefault();
+    const touches = evt.changedTouches;
+    touchId = touches[0].identifier;
+
+    for (let i = 0; i < touches.length; i++) {
+        previousCoordinates = { x: Math.trunc(touches[i].clientX), y: Math.trunc(touches[i].clientY) };
+    }
+};
+
+const handleMove = function (evt) {
+    evt.preventDefault();
+    const touches = evt.changedTouches;
+
+    for (let i = 0; i < touches.length; i++) {
+        if (touches[i].identifier === touchId) {
+            const currentCoordinates = { x: Math.trunc(touches[i].clientX), y: Math.trunc(touches[i].clientY) };
+            postMoveMouse(currentCoordinates.x - previousCoordinates.x, currentCoordinates.y - previousCoordinates.y);
+            previousCoordinates = currentCoordinates;
+        }
+    }
+};
+
+const handleEnd = function (evt) {
+    evt.preventDefault();
+    previousCoordinates = null;
+    touchId = null;
+};
+
+const handleCancel = function (evt) {
+    evt.preventDefault();
+    previousCoordinates = null;
+    touchId = null;
+};
+
 const startup = function () {
     const keyboard = document.getElementById("keyboard-input");
     const touchpad = document.getElementById("touchpad");
@@ -46,39 +84,3 @@ const startup = function () {
 };
 
 document.addEventListener("DOMContentLoaded", startup);
-
-let previousCoordinates = null;
-
-const handleStart = function (evt) {
-    evt.preventDefault();
-    const touches = evt.changedTouches;
-
-    for (let i = 0; i < touches.length; i++) {
-        previousCoordinates = { x: Math.trunc(touches[i].clientX), y: Math.trunc(touches[i].clientY) };
-    }
-};
-
-const handleMove = function (evt) {
-    evt.preventDefault();
-    const touches = evt.changedTouches;
-    const id = touches[0].identifier;
-
-    for (let i = 0; i < touches.length; i++) {
-        if (touches[i].identifier === id) {
-            const currentCoordinates = { x: Math.trunc(touches[i].clientX), y: Math.trunc(touches[i].clientY) };
-            postMoveMouse(currentCoordinates.x - previousCoordinates.x, currentCoordinates.y - previousCoordinates.y);
-            previousCoordinates = currentCoordinates;
-        }
-    }
-};
-
-const handleEnd = function (evt) {
-    evt.preventDefault();
-    previousCoordinates = null;
-};
-
-const handleCancel = function (evt) {
-    evt.preventDefault();
-    previousCoordinates = null;
-};
-
