@@ -1,3 +1,11 @@
+//=========================================== V A R I A B L E S ===========================================
+const keyboard = document.getElementById("keyboard-input");
+const touchpad = document.getElementById("touchpad");
+
+
+
+//=========================================== A P I C A L L S ===========================================
+
 const postMoveMouse = function (x, y) {
     const endpoint = "/move-mouse";
 
@@ -35,11 +43,12 @@ const postClick = function (button) {
     });
 };
 
-//==================== K E Y B O A R D ====================
+
+
+//=========================================== K E Y B O A R D ===========================================
 
 const handleKeyDown = function (evt) {
     //evt.preventDefault();
-    const keyboard = document.getElementById("keyboard-input");
 
     //alert(`keydown full: ${evt.target.value}`);
     //alert(`keydown evt.key: ${evt.key}`);
@@ -51,7 +60,6 @@ const handleKeyDown = function (evt) {
 
 const handleKeyUp = function (evt) {
     //evt.preventDefault();
-    const keyboard = document.getElementById("keyboard-input");
 
     //alert(`keyup full: ${evt.target.value}`);
     //alert(`keyup evt.key: ${evt.key}`);
@@ -66,7 +74,9 @@ const handleKeyUp = function (evt) {
     // }
 };
 
-//==================== M O U S E ====================
+
+
+//=========================================== M O U S E ===========================================
 
 let startCoordinates = null;
 let pastCoordinates = null;
@@ -80,6 +90,8 @@ const handleStart = function (evt) {
     startCoordinates = createCoordinateObj(touches[0]);
 
     pastCoordinates = startCoordinates;
+
+    removeKeyboardFocus();
 };
 
 const handleMove = function (evt) {
@@ -89,9 +101,11 @@ const handleMove = function (evt) {
     if (touches[0].identifier === startTouchId) {
         const currentCoordinates = createCoordinateObj(touches[0]);
         const deltaCoordinates = calculateIntDeltaCoordinates(currentCoordinates, pastCoordinates);
+
         if (deltaCoordinates.deltaX != 0 || deltaCoordinates.deltaY != 0) {
             postMoveMouse(deltaCoordinates.deltaX, deltaCoordinates.deltaY);
         }
+
         pastCoordinates = currentCoordinates;
     }
 };
@@ -113,32 +127,36 @@ const handleCancel = function (evt) {
 
 const checkLeftClick = function (startCoordinates, endCoordinates) {
     const deltaCoordinates = calculateIntDeltaCoordinates(startCoordinates, endCoordinates);
-    if (Math.abs(deltaCoordinates.deltaX) <= 2 && Math.abs(deltaCoordinates.deltaY) <= 2) {
+
+    if (deltaCoordinates.deltaX == 0 && deltaCoordinates.deltaY == 0) {
         postClick("left");
     }
-}
+};
 
 const createCoordinateObj = function (touchObj) {
     return { x: touchObj.screenX, y: touchObj.screenY };
-}
+};
 
 const calculateIntDeltaCoordinates = function (current, past) {
     const deltaX = Math.trunc(current.x - past.x);
     const deltaY = Math.trunc(current.y - past.y);
     return { deltaX: deltaX, deltaY: deltaY };
-}
+};
 
 const resetTouchVariables = function () {
     pastCoordinates = null;
     startTouchId = null;
-}
+};
 
-//==================== S T A R T U P ====================
+const removeKeyboardFocus = function () {
+    keyboard.blur();
+};
+
+
+
+//=========================================== S T A R T U P ===========================================
 
 const startup = function () {
-    const keyboard = document.getElementById("keyboard-input");
-    const touchpad = document.getElementById("touchpad");
-
     keyboard.addEventListener("keydown", handleKeyDown);
     keyboard.addEventListener("keyup", handleKeyUp);
 
