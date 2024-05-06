@@ -25,7 +25,7 @@ const postToServer = function (endpoint, data) {
 
 //=========================================== K E Y B O A R D ===========================================
 
-const handleKeyDown = function (evt) {
+const handleKeyDownIOS = function (evt) {
     //alert(`keydown full: ${evt.target.value}`);
     //alert(`keydown evt.key: ${evt.key}`);
 
@@ -34,20 +34,50 @@ const handleKeyDown = function (evt) {
     }
 };
 
-const handleKeyUp = function (evt) {
-    //alert(`keyup full: ${evt.target.value}`);
-    //alert(`keyup evt.key: ${evt.key}`);
+let pastAndroidKeyUpLength = null;
+let pastAndroidKeyUpValue = null;
 
-    if (evt.key === "Unidentified") {
-        const fullValue = evt.target.value;
-        const currChar = fullValue[fullValue.length - 1];
+const handleKeyUpAndroid = function (evt) {
+    //alert(`keyup full: '${evt.target.value}'`);
+    //alert(`keyup evt.key: '${evt.key}'`);
+
+    const currentAndroidKeyUpLength = evt.target.value.length;
+    const currentAndroidKeyUpValue = evt.target.value;
+
+    if (evt.key === "Enter") {
+        postToServer("/type-character", { character: evt.key });
+    }
+    else if (currentAndroidKeyUpLength < pastAndroidKeyUpLength || evt.key === "Backspace") {
+        postToServer("/type-character", { character: "Backspace" });
+    }
+    else if (evt.key === "Unidentified" && currentAndroidKeyUpLength != pastAndroidKeyUpLength) {
+        const currChar = findDiff(pastAndroidKeyUpValue, currentAndroidKeyUpValue);
         postToServer("/type-character", { character: currChar });
     }
+
+    pastAndroidKeyUpLength = currentAndroidKeyUpLength;
+    pastAndroidKeyUpValue = currentAndroidKeyUpValue;
+};
+
+const handleKeyboardFocusAndroid = function (evt) {
+    pastAndroidKeyUpLength = evt.target.value.length;
+    pastAndroidKeyUpValue = evt.target.value;
+};
+
+const findDiff = function (pastStr, currentStr) {
+    let i = 0;
+    while (i < pastStr.length && i < currentStr.length && pastStr[i] === currentStr[i]) {
+        i++;
+    }
+    if (i < currentStr.length) {
+        return currentStr[i];
+    }
+    return null;
 };
 
 const handleKeyboardFocusOut = function (evt) {
     clickAllowed = false;
-}
+};
 
 
 
@@ -104,8 +134,8 @@ const handleTouchCancel = function (evt) {
 
 const checkLeftClick = function (startCoordinates, endCoordinates) {
     const deltaCoordinates = calculateIntDeltaCoordinates(startCoordinates, endCoordinates);
-    const CLICK_THRESHOLD = 1;
-    if (Math.abs(deltaCoordinates.deltaX) <= CLICK_THRESHOLD && Math.abs(deltaCoordinates.deltaY) <= CLICK_THRESHOLD) {
+    const clickThreshold = 1;
+    if (Math.abs(deltaCoordinates.deltaX) <= clickThreshold && Math.abs(deltaCoordinates.deltaY) <= clickThreshold) {
         postToServer("/click", { button: "left" });
     }
 };
@@ -133,10 +163,35 @@ const removeKeyboardFocus = function () {
 
 //=========================================== S T A R T U P ===========================================
 
+const getOperatingSystem = function () {
+    var userAgent = navigator.userAgent || window.opera;
+
+    // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+
+    return "unknown";
+};
+
 const startup = function () {
     keyboard.addEventListener("focusout", handleKeyboardFocusOut);
-    keyboard.addEventListener("keydown", handleKeyDown);
-    keyboard.addEventListener("keyup", handleKeyUp);
+    const clientOS = getOperatingSystem();
+    if (clientOS === "Android") {
+        keyboard.addEventListener("focus", handleKeyboardFocusAndroid);
+        keyboard.addEventListener("keyup", handleKeyUpAndroid);
+    } else if (clientOS === "iOS") {
+        keyboard.addEventListener("keydown", handleKeyDownIOS);
+    }
 
     touchpad.addEventListener("touchstart", handleTouchStart);
     touchpad.addEventListener("touchmove", handleTouchMove, { passive: false });
