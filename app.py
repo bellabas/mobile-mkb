@@ -49,7 +49,7 @@ def type_character():
 @app.post("/click")
 def click_response():
     try:
-        button = request.form.get("click", type=str)
+        button = request.form.get("button", type=str)
         pyautogui.click(button=button)
     except ValueError:
         return "Bad request"

@@ -4,42 +4,19 @@ const touchpad = document.getElementById("touchpad");
 
 
 
-//=========================================== A P I C A L L S ===========================================
+//=========================================== A P I C A L L ===========================================
 
-const postMoveMouse = function (x, y) {
-    const endpoint = "/move-mouse";
-
-    let data = new FormData();
-    data.append("x", x);
-    data.append("y", y);
-
-    fetch(endpoint, {
-        "method": "POST",
-        "body": data,
-    });
-};
-
-const postTypeCharacter = function (character) {
-    const endpoint = "/type-character";
-
-    let data = new FormData();
-    data.append("character", character);
+const postToServer = function (endpoint, data) {
+    let formData = new FormData();
+    for (const key in data) {
+        formData.append(key, data[key]);
+    }
 
     fetch(endpoint, {
-        "method": "POST",
-        "body": data,
-    });
-};
-
-const postClick = function (button) {
-    const endpoint = "/click";
-
-    let data = new FormData();
-    data.append("click", button);
-
-    fetch(endpoint, {
-        "method": "POST",
-        "body": data,
+        method: "POST",
+        body: formData,
+    }).catch(error => {
+        console.error('Error:', error);
     });
 };
 
@@ -52,7 +29,7 @@ const handleKeyDown = function (evt) {
     //alert(`keydown evt.key: ${evt.key}`);
 
     if (evt.key != "Unidentified") {
-        postTypeCharacter(evt.key);
+        postToServer("/type-character", { character: evt.key });
     }
 };
 
@@ -63,7 +40,7 @@ const handleKeyUp = function (evt) {
     if (evt.key === "Unidentified") {
         const fullValue = evt.target.value;
         const currChar = fullValue[fullValue.length - 1];
-        postTypeCharacter(currChar);
+        postToServer("/type-character", { character: currChar });
     }
 };
 
@@ -95,7 +72,7 @@ const handleTouchMove = function (evt) {
         const deltaCoordinates = calculateIntDeltaCoordinates(currentCoordinates, pastCoordinates);
 
         if (deltaCoordinates.deltaX != 0 || deltaCoordinates.deltaY != 0) {
-            postMoveMouse(deltaCoordinates.deltaX, deltaCoordinates.deltaY);
+            postToServer("/move-mouse", { x: deltaCoordinates.deltaX, y: deltaCoordinates.deltaY });
         }
 
         pastCoordinates = currentCoordinates;
@@ -119,7 +96,7 @@ const checkLeftClick = function (startCoordinates, endCoordinates) {
     const deltaCoordinates = calculateIntDeltaCoordinates(startCoordinates, endCoordinates);
     const CLICK_THRESHOLD = 1;
     if (Math.abs(deltaCoordinates.deltaX) <= CLICK_THRESHOLD && Math.abs(deltaCoordinates.deltaY) <= CLICK_THRESHOLD) {
-        postClick("left");
+        postToServer("/click", { button: "left" });
     }
 };
 
