@@ -2,6 +2,7 @@
 const keyboard = document.getElementById("keyboard-input");
 const touchpad = document.getElementById("touchpad");
 
+let clickAllowed = true;
 
 
 //=========================================== A P I C A L L ===========================================
@@ -44,6 +45,10 @@ const handleKeyUp = function (evt) {
     }
 };
 
+const handleKeyboardFocusOut = function (evt) {
+    clickAllowed = false;
+}
+
 
 
 //=========================================== M O U S E ===========================================
@@ -83,7 +88,12 @@ const handleTouchEnd = function (evt) {
     const touches = evt.changedTouches;
     const endCoordinates = createCoordinateObj(touches[0]);
 
-    checkLeftClick(startCoordinates, endCoordinates);
+    if (clickAllowed) {
+        checkLeftClick(startCoordinates, endCoordinates);
+    }
+    else {
+        clickAllowed = true;
+    }
 
     resetTouchVariables();
 };
@@ -124,6 +134,7 @@ const removeKeyboardFocus = function () {
 //=========================================== S T A R T U P ===========================================
 
 const startup = function () {
+    keyboard.addEventListener("focusout", handleKeyboardFocusOut);
     keyboard.addEventListener("keydown", handleKeyDown);
     keyboard.addEventListener("keyup", handleKeyUp);
 
