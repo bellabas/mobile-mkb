@@ -48,8 +48,6 @@ const postClick = function (button) {
 //=========================================== K E Y B O A R D ===========================================
 
 const handleKeyDown = function (evt) {
-    //evt.preventDefault();
-
     //alert(`keydown full: ${evt.target.value}`);
     //alert(`keydown evt.key: ${evt.key}`);
 
@@ -59,19 +57,14 @@ const handleKeyDown = function (evt) {
 };
 
 const handleKeyUp = function (evt) {
-    //evt.preventDefault();
-
     //alert(`keyup full: ${evt.target.value}`);
     //alert(`keyup evt.key: ${evt.key}`);
 
-    // if (evt.key === "Unidentified" && evt.key != "Enter" && evt.key != "Backspace") {
-    //     const fullValue = evt.target.value;
-    //     const currChar = fullValue[fullValue.length - 1];
-    //     postTypeCharacter(currChar);
-    // }
-    // else if (evt.key != "Unidentified" && evt.key != "Enter" && evt.key != "Backspace") {
-    //     postTypeCharacter(evt.key);
-    // }
+    if (evt.key === "Unidentified") {
+        const fullValue = evt.target.value;
+        const currChar = fullValue[fullValue.length - 1];
+        postTypeCharacter(currChar);
+    }
 };
 
 
@@ -82,8 +75,7 @@ let startCoordinates = null;
 let pastCoordinates = null;
 let startTouchId = null;
 
-const handleStart = function (evt) {
-    evt.preventDefault();
+const handleTouchStart = function (evt) {
     const touches = evt.changedTouches;
 
     startTouchId = touches[0].identifier;
@@ -94,7 +86,7 @@ const handleStart = function (evt) {
     removeKeyboardFocus();
 };
 
-const handleMove = function (evt) {
+const handleTouchMove = function (evt) {
     evt.preventDefault();
     const touches = evt.changedTouches;
 
@@ -110,8 +102,7 @@ const handleMove = function (evt) {
     }
 };
 
-const handleEnd = function (evt) {
-    //evt.preventDefault();
+const handleTouchEnd = function (evt) {
     const touches = evt.changedTouches;
     const endCoordinates = createCoordinateObj(touches[0]);
 
@@ -120,15 +111,14 @@ const handleEnd = function (evt) {
     resetTouchVariables();
 };
 
-const handleCancel = function (evt) {
-    //evt.preventDefault();
+const handleTouchCancel = function (evt) {
     resetTouchVariables();
 };
 
 const checkLeftClick = function (startCoordinates, endCoordinates) {
     const deltaCoordinates = calculateIntDeltaCoordinates(startCoordinates, endCoordinates);
-
-    if (deltaCoordinates.deltaX == 0 && deltaCoordinates.deltaY == 0) {
+    const CLICK_THRESHOLD = 1;
+    if (Math.abs(deltaCoordinates.deltaX) <= CLICK_THRESHOLD && Math.abs(deltaCoordinates.deltaY) <= CLICK_THRESHOLD) {
         postClick("left");
     }
 };
@@ -160,10 +150,10 @@ const startup = function () {
     keyboard.addEventListener("keydown", handleKeyDown);
     keyboard.addEventListener("keyup", handleKeyUp);
 
-    touchpad.addEventListener("touchstart", handleStart);
-    touchpad.addEventListener("touchend", handleEnd);
-    touchpad.addEventListener("touchcancel", handleCancel);
-    touchpad.addEventListener("touchmove", handleMove);
+    touchpad.addEventListener("touchstart", handleTouchStart);
+    touchpad.addEventListener("touchmove", handleTouchMove, { passive: false });
+    touchpad.addEventListener("touchend", handleTouchEnd);
+    touchpad.addEventListener("touchcancel", handleTouchCancel);
 };
 
 document.addEventListener("DOMContentLoaded", startup);
