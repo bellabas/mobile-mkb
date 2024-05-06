@@ -71,11 +71,11 @@ const handleTouchMove = function (evt) {
         const currentCoordinates = createCoordinateObj(touches[0]);
         const deltaCoordinates = calculateIntDeltaCoordinates(currentCoordinates, pastCoordinates);
 
-        if (deltaCoordinates.deltaX != 0 || deltaCoordinates.deltaY != 0) {
+        const moveThreshold = 5;
+        if (Math.abs(deltaCoordinates.deltaX) >= moveThreshold || Math.abs(deltaCoordinates.deltaY) >= moveThreshold) {
             postToServer("/move-mouse", { x: deltaCoordinates.deltaX, y: deltaCoordinates.deltaY });
+            pastCoordinates = currentCoordinates;
         }
-
-        pastCoordinates = currentCoordinates;
     }
 };
 
