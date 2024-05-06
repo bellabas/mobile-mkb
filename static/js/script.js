@@ -35,7 +35,7 @@ const postClick = function (button) {
     });
 };
 
-//==========KEYBOARD==========
+//==================== K E Y B O A R D ====================
 
 const handleKeyDown = function (evt) {
     //evt.preventDefault();
@@ -66,48 +66,74 @@ const handleKeyUp = function (evt) {
     // }
 };
 
-//==========MOUSE==========
+//==================== M O U S E ====================
 
 let startCoordinates = null;
-let previousCoordinates = null;
-let touchId = null;
+let pastCoordinates = null;
+let startTouchId = null;
 
 const handleStart = function (evt) {
     evt.preventDefault();
     const touches = evt.changedTouches;
-    touchId = touches[0].identifier;
 
-    previousCoordinates = { x: Math.trunc(touches[0].screenX), y: Math.trunc(touches[0].screenY) };
-    startCoordinates = previousCoordinates;
+    startTouchId = touches[0].identifier;
+    startCoordinates = createCoordinateObj(touches[0]);
+
+    pastCoordinates = startCoordinates;
 };
 
 const handleMove = function (evt) {
     evt.preventDefault();
     const touches = evt.changedTouches;
 
-    if (touches[0].identifier === touchId) {
-        const currentCoordinates = { x: Math.trunc(touches[0].screenX), y: Math.trunc(touches[0].screenY) };
-        postMoveMouse(currentCoordinates.x - previousCoordinates.x, currentCoordinates.y - previousCoordinates.y);
-        previousCoordinates = currentCoordinates;
+    if (touches[0].identifier === startTouchId) {
+        const currentCoordinates = createCoordinateObj(touches[0]);
+        const deltaCoordinates = calculateIntDeltaCoordinates(currentCoordinates, pastCoordinates);
+        if (deltaCoordinates.deltaX != 0 || deltaCoordinates.deltaY != 0) {
+            postMoveMouse(deltaCoordinates.deltaX, deltaCoordinates.deltaY);
+        }
+        pastCoordinates = currentCoordinates;
     }
 };
 
 const handleEnd = function (evt) {
     //evt.preventDefault();
     const touches = evt.changedTouches;
-    const endCoordinates = { x: Math.trunc(touches[0].screenX), y: Math.trunc(touches[0].screenY) };
-    if (Math.abs(startCoordinates.x - endCoordinates.x) <= 2 && Math.abs(startCoordinates.y - endCoordinates.y) <= 2) {
-        postClick("left");
-    }
-    //previousCoordinates = null;
-    touchId = null;
+    const endCoordinates = createCoordinateObj(touches[0]);
+
+    checkLeftClick(startCoordinates, endCoordinates);
+
+    resetTouchVariables();
 };
 
 const handleCancel = function (evt) {
     //evt.preventDefault();
-    //previousCoordinates = null;
-    touchId = null;
+    resetTouchVariables();
 };
+
+const checkLeftClick = function (startCoordinates, endCoordinates) {
+    const deltaCoordinates = calculateIntDeltaCoordinates(startCoordinates, endCoordinates);
+    if (Math.abs(deltaCoordinates.deltaX) <= 2 && Math.abs(deltaCoordinates.deltaY) <= 2) {
+        postClick("left");
+    }
+}
+
+const createCoordinateObj = function (touchObj) {
+    return { x: touchObj.screenX, y: touchObj.screenY };
+}
+
+const calculateIntDeltaCoordinates = function (current, past) {
+    const deltaX = Math.trunc(current.x - past.x);
+    const deltaY = Math.trunc(current.y - past.y);
+    return { deltaX: deltaX, deltaY: deltaY };
+}
+
+const resetTouchVariables = function () {
+    pastCoordinates = null;
+    startTouchId = null;
+}
+
+//==================== S T A R T U P ====================
 
 const startup = function () {
     const keyboard = document.getElementById("keyboard-input");
