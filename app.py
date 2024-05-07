@@ -1,6 +1,7 @@
 import socket
-from flask import Flask, request, render_template
+import webbrowser
 import pyautogui
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
@@ -57,4 +58,5 @@ def click_response():
 
 
 if __name__ == "__main__":
+    webbrowser.open(f"http://{IP_ADDRESS}:{PORT}", new=0, autoraise=True)
     app.run(host=IP_ADDRESS, port=PORT, debug=True)
