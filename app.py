@@ -57,5 +57,5 @@ def click_response():
 
 
 if __name__ == "__main__":
-    webbrowser.open(f"http://{IP_ADDRESS}:{PORT}", new=0, autoraise=True)
-    app.run(host=IP_ADDRESS, port=PORT, debug=True)
+    webbrowser.open(f"https://{IP_ADDRESS}:{PORT}", new=0, autoraise=True)
+    app.run(host=IP_ADDRESS, port=PORT, ssl_context='adhoc')
