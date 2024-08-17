@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.png') }}">
     <title>Mobile MKB</title>
@@ -19,14 +20,16 @@
     </div>
 
     <div id="ip-address-container">
-        <div id="ip-address-text">Please open the following address in your phone’s browser:</div>
+        <div id="ip-address-text">Please scan the following QR code on your phone:</div>
         <div id="ip-address"></div>
     </div>
 
     <script>
         const ipAddress = {{ IP_ADDRESS| tojson }}
         const port = {{ PORT| tojson }}
-        document.getElementById("ip-address").innerText = `${ipAddress}:${port}`
+        //document.getElementById("ip-address").innerText = `${ipAddress}:${port}`
+        const qrcode = new QRCode(document.getElementById("ip-address"), { text: `http://${ipAddress}:${port}`, colorLight: "#808080" });
+    </script>
     </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

@@ -28,6 +28,7 @@ body {
     background-color: #808080;
     color: transparent;
     z-index: 2;
+    caret-color: transparent;
 
     /* user-select: none;
     text-decoration: none;
@@ -79,16 +80,19 @@ body {
 #ip-address-text,
 #ip-address {
     margin: 0px;
-    font-size: 3em;
     width: 80%;
 }
 
-#ip-address-text {
-    margin-bottom: 0.5em;
+#ip-address {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-#ip-address {
-    font-weight: bold;
+#ip-address-text {
+    font-size: 3em;
+    margin-bottom: 0.5em;
 }
 
 /* mobile */
