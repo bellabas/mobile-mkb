@@ -1,9 +1,10 @@
 import socket
 import webbrowser
+import json
 import pyautogui
+import secrets
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
-import secrets
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex()
@@ -26,15 +27,15 @@ def index():
     return render_template("index.html", IP_ADDRESS=IP_ADDRESS, PORT=PORT)
 
 
-@app.post("/move-mouse")
-def move_mouse():
-    try:
-        x = request.form.get("x", type=int)
-        y = request.form.get("y", type=int)
-        pyautogui.moveRel(xOffset=x, yOffset=y)
-    except ValueError:
-        return "Bad request"
-    return "Ok"
+# @app.post("/move-mouse")
+# def move_mouse():
+#     try:
+#         x = request.form.get("x", type=int)
+#         y = request.form.get("y", type=int)
+#         pyautogui.moveRel(xOffset=x, yOffset=y)
+#     except ValueError:
+#         return "Bad request"
+#     return "Ok"
 
 
 @app.post("/type-character")
@@ -58,6 +59,14 @@ def click_response():
     except ValueError:
         return "Bad request"
     return "Ok"
+
+
+@socketio.on("move-mouse")
+def handle_my_custom_event(json_data):
+    parsed_json_data = json.loads(json_data)
+    x = int(parsed_json_data["x"])
+    y = int(parsed_json_data["y"])
+    pyautogui.moveRel(xOffset=x, yOffset=y)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ const touchpad = document.getElementById("touchpad");
 
 let clickAllowed = true;
 
+const socket = io();
 
 //=========================================== A P I C A L L ===========================================
 
@@ -106,9 +107,10 @@ const handleTouchMove = function (evt) {
         const currentCoordinates = createCoordinateObj(touches[0]);
         const deltaCoordinates = calculateIntDeltaCoordinates(currentCoordinates, pastCoordinates);
 
-        const moveThreshold = 5;
+        const moveThreshold = 1;
         if (Math.abs(deltaCoordinates.deltaX) >= moveThreshold || Math.abs(deltaCoordinates.deltaY) >= moveThreshold) {
-            postToServer("/move-mouse", { x: deltaCoordinates.deltaX, y: deltaCoordinates.deltaY });
+            //postToServer("/move-mouse", { x: deltaCoordinates.deltaX, y: deltaCoordinates.deltaY });
+            socket.emit('move-mouse', `{ "x": ${deltaCoordinates.deltaX}, "y": ${deltaCoordinates.deltaY} }`);
             pastCoordinates = currentCoordinates;
         }
     }
@@ -164,22 +166,17 @@ const removeKeyboardFocus = function () {
 //=========================================== S T A R T U P ===========================================
 
 const getOperatingSystem = function () {
-    var userAgent = navigator.userAgent || window.opera;
-
+    const userAgent = navigator.userAgent || window.opera;
     // Windows Phone must come first because its UA also contains "Android"
     if (/windows phone/i.test(userAgent)) {
         return "Windows Phone";
     }
-
     if (/android/i.test(userAgent)) {
         return "Android";
     }
-
-    // iOS detection from: http://stackoverflow.com/a/9039885/177710
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
         return "iOS";
     }
-
     return "unknown";
 };
 
