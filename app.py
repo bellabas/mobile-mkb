@@ -2,8 +2,12 @@ import socket
 import webbrowser
 import pyautogui
 from flask import Flask, request, render_template
+from flask_socketio import SocketIO
+import secrets
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = secrets.token_hex()
+socketio = SocketIO(app)
 
 
 def get_ipv4_address():
@@ -58,4 +62,6 @@ def click_response():
 
 if __name__ == "__main__":
     webbrowser.open(f"https://{IP_ADDRESS}:{PORT}", new=0, autoraise=True)
-    app.run(host=IP_ADDRESS, port=PORT, ssl_context='adhoc')
+    # app.run(host=IP_ADDRESS, port=PORT, ssl_context='adhoc')
+    socketio.run(app, host=IP_ADDRESS, port=PORT,
+                 allow_unsafe_werkzeug=True, ssl_context='adhoc')
