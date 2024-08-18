@@ -110,7 +110,7 @@ const handleTouchMove = function (evt) {
         const moveThreshold = 1;
         if (Math.abs(deltaCoordinates.deltaX) >= moveThreshold || Math.abs(deltaCoordinates.deltaY) >= moveThreshold) {
             //postToServer("/move-mouse", { x: deltaCoordinates.deltaX, y: deltaCoordinates.deltaY });
-            socket.emit('move-mouse', `{ "x": ${deltaCoordinates.deltaX}, "y": ${deltaCoordinates.deltaY} }`);
+            socket.emit("move-mouse", { "x": deltaCoordinates.deltaX, "y": deltaCoordinates.deltaY });
             pastCoordinates = currentCoordinates;
         }
     }

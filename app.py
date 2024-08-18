@@ -1,8 +1,7 @@
 import socket
 import webbrowser
-import json
-import pyautogui
 import secrets
+import pyautogui
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
 
@@ -62,11 +61,15 @@ def click_response():
 
 
 @socketio.on("move-mouse")
-def handle_my_custom_event(json_data):
-    parsed_json_data = json.loads(json_data)
-    x = int(parsed_json_data["x"])
-    y = int(parsed_json_data["y"])
+def handle_my_custom_event(delta_coordinates):
+    x = int(delta_coordinates["x"])
+    y = int(delta_coordinates["y"])
     pyautogui.moveRel(xOffset=x, yOffset=y)
+
+
+@socketio.on_error()
+def error_handler(e):
+    print(e)
 
 
 if __name__ == "__main__":
