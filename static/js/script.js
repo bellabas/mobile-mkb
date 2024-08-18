@@ -103,14 +103,26 @@ const handleTouchMove = function (evt) {
     evt.preventDefault();
     const touches = evt.changedTouches;
 
-    if (touches[0].identifier === startTouchId) {
-        const currentCoordinates = createCoordinateObj(touches[0]);
+    let index = 0;
+    for (let i = 0; i < touches.length; i++) {
+        if (touches[i].identifier === startTouchId) {
+            index = i;
+        }
+    }
+
+    if (touches[index].identifier === startTouchId) {
+        const currentCoordinates = createCoordinateObj(touches[index]);
         const deltaCoordinates = calculateIntDeltaCoordinates(currentCoordinates, pastCoordinates);
 
         const moveThreshold = 1;
-        if (Math.abs(deltaCoordinates.deltaX) >= moveThreshold || Math.abs(deltaCoordinates.deltaY) >= moveThreshold) {
+        const scrollThreshold = 5;
+        if (touches.length == 1 && (Math.abs(deltaCoordinates.deltaX) >= moveThreshold || Math.abs(deltaCoordinates.deltaY) >= moveThreshold)) {
             //postToServer("/move-mouse", { x: deltaCoordinates.deltaX, y: deltaCoordinates.deltaY });
             socket.emit("move-mouse", { "x": deltaCoordinates.deltaX, "y": deltaCoordinates.deltaY });
+            pastCoordinates = currentCoordinates;
+        }
+        else if (touches.length == 2 && Math.abs(deltaCoordinates.deltaY) >= scrollThreshold) {
+            socket.emit("scrolling", { "y": deltaCoordinates.deltaY });
             pastCoordinates = currentCoordinates;
         }
     }
