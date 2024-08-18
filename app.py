@@ -1,3 +1,4 @@
+import logging
 import socket
 import webbrowser
 import secrets
@@ -8,6 +9,8 @@ from flask_socketio import SocketIO
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex()
 socketio = SocketIO(app, async_mode="threading")
+log = logging.getLogger("werkzeug")
+log.setLevel(logging.ERROR)
 
 
 def get_ipv4_address():
