@@ -1,5 +1,7 @@
 //=========================================== V A R I A B L E S ===========================================
 const keyboard = document.getElementById("keyboard-input");
+const leftMouseButton = document.getElementById("left-click-button-input");
+const rightMouseButton = document.getElementById("right-click-button-input");
 const touchpad = document.getElementById("touchpad");
 
 let clickAllowed = true;
@@ -175,6 +177,18 @@ const removeKeyboardFocus = function () {
 
 
 
+//====================================== M O U S E  B U T T O N ======================================
+
+const handleLeftMouseButtonClick = function () {
+    postToServer("/click", { button: "left" });
+};
+
+const handleRightMouseButtonClick = function () {
+    postToServer("/click", { button: "right" });
+};
+
+
+
 //=========================================== S T A R T U P ===========================================
 
 const getOperatingSystem = function () {
@@ -194,6 +208,8 @@ const getOperatingSystem = function () {
 
 const startup = function () {
     keyboard.addEventListener("focusout", handleKeyboardFocusOut);
+    leftMouseButton.addEventListener("click", handleLeftMouseButtonClick);
+    rightMouseButton.addEventListener("click", handleRightMouseButtonClick);
     const clientOS = getOperatingSystem();
     if (clientOS === "Android") {
         keyboard.addEventListener("focus", handleKeyboardFocusAndroid);
