@@ -1,4 +1,5 @@
 //=========================================== V A R I A B L E S ===========================================
+
 const keyboard = document.getElementById("keyboard-input");
 const leftMouseButton = document.getElementById("left-click-button-input");
 const rightMouseButton = document.getElementById("right-click-button-input");
@@ -7,6 +8,8 @@ const touchpad = document.getElementById("touchpad");
 let clickAllowed = true;
 
 const socket = io();
+
+
 
 //=========================================== A P I C A L L ===========================================
 
