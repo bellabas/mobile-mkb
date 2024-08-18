@@ -7,7 +7,7 @@ from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex()
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode="threading")
 
 
 def get_ipv4_address():
@@ -24,17 +24,6 @@ PORT = 5000
 @app.route("/")
 def index():
     return render_template("index.html", IP_ADDRESS=IP_ADDRESS, PORT=PORT)
-
-
-# @app.post("/move-mouse")
-# def move_mouse():
-#     try:
-#         x = request.form.get("x", type=int)
-#         y = request.form.get("y", type=int)
-#         pyautogui.moveRel(xOffset=x, yOffset=y)
-#     except ValueError:
-#         return "Bad request"
-#     return "Ok"
 
 
 @app.post("/type-character")
@@ -79,5 +68,6 @@ def error_handler(e):
 
 
 if __name__ == "__main__":
-    webbrowser.open(f"http://{IP_ADDRESS}:{PORT}", new=0, autoraise=True)
-    socketio.run(app, host=IP_ADDRESS, port=PORT, debug=False, allow_unsafe_werkzeug=True)
+    webbrowser.open(f"https://{IP_ADDRESS}:{PORT}", new=0, autoraise=True)
+    socketio.run(app, host=IP_ADDRESS, port=PORT,
+                 debug=False, allow_unsafe_werkzeug=True, ssl_context="adhoc")
