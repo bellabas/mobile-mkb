@@ -8,6 +8,7 @@ from flask_socketio import SocketIO
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex()
 socketio = SocketIO(app, async_mode="threading")
+pyautogui.FAILSAFE = False
 
 
 def get_ipv4_address():
