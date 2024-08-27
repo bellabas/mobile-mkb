@@ -11,6 +11,7 @@ app.config['SECRET_KEY'] = secrets.token_hex()
 socketio = SocketIO(app, async_mode="threading")
 log = logging.getLogger("werkzeug")
 log.setLevel(logging.ERROR)
+pyautogui.FAILSAFE = False
 
 
 def get_ipv4_address():
