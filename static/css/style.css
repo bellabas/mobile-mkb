@@ -1,10 +1,18 @@
+:root {
+    --bg-primary-color: #E0E0E0;
+    --bg-secondary-color: #BDBDBD;
+    --bg-secondary-active-color: #9E9E9E;
+    --border-color: #000000;
+}
+
 html,
 body {
     margin: 0;
     height: 100%;
-    background-color: #808080;
+    background-color: var(--bg-primary-color);
 }
 
+/* Keyboard Container */
 #keyboard-container {
     position: fixed;
     top: 2%;
@@ -22,25 +30,19 @@ body {
     height: 100%;
     width: 100%;
     border-radius: 25px;
-    border: 1px solid black;
-    padding: 0px;
+    border: 1px solid var(--border-color);
+    padding: 0;
     text-align: center;
-    background-color: #808080;
+    background-color: var(--bg-secondary-color);
     color: transparent;
-    z-index: 2;
     caret-color: transparent;
-
-    /* user-select: none;
-    text-decoration: none;
-    cursor: default; */
 }
 
 #keyboard-input:focus {
     outline: none;
     box-shadow: none;
-    border: 2px solid black;
-    background-color: #696969;
-    /* cursor: default; */
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-secondary-active-color);
 }
 
 #keyboard-overlay-text {
@@ -49,7 +51,6 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 3;
     pointer-events: none;
     display: flex;
     justify-content: center;
@@ -61,6 +62,7 @@ body {
     font-weight: bolder;
 }
 
+/* Mouse Button Container */
 #mouse-button-container {
     position: fixed;
     top: 93%;
@@ -78,16 +80,15 @@ body {
     height: 100%;
     border: 0;
     padding: 0;
-    border: 1px solid black;
-    background-color: #808080;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary-color);
 }
 
 .mouse-button-input:active {
     outline: none;
     box-shadow: none;
-    border: 2px solid black;
-    background-color: #696969;
-    /* cursor: default; */
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-secondary-active-color);
 }
 
 #left-click-button-input {
@@ -100,12 +101,14 @@ body {
     border-bottom-right-radius: 25px;
 }
 
+/* Touchpad */
 #touchpad {
     width: 100%;
     height: 100%;
-    background-color: #a9a9a9;
+    background-color: var(--bg-primary-color);
 }
 
+/* IP Address Container */
 #ip-address-container {
     width: 100%;
     height: 100%;
@@ -118,7 +121,7 @@ body {
 
 #ip-address-text,
 #ip-address {
-    margin: 0px;
+    margin: 0;
     width: 80%;
 }
 
@@ -134,23 +137,18 @@ body {
     margin-bottom: 0.5em;
 }
 
-/* mobile */
+/* Mobile */
 @media screen and (max-width: 600px) and (orientation: portrait) {
     #ip-address-container {
         display: none;
     }
 }
 
-/* desktop */
+/* Desktop */
 @media screen and (min-width: 600px) {
-    #keyboard-container {
-        display: none;
-    }
 
-    #mouse-button-container {
-        display: none;
-    }
-
+    #keyboard-container,
+    #mouse-button-container,
     #touchpad {
         display: none;
     }

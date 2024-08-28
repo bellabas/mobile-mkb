@@ -37,7 +37,7 @@
     <script>
         const ipAddress = {{ IP_ADDRESS| tojson }}
         const port = {{ PORT| tojson }}
-        const qrcode = new QRCode(document.getElementById("ip-address"), { text: `https://${ipAddress}:${port}`, colorLight: "#808080" });
+        const qrcode = new QRCode(document.getElementById("ip-address"), { text: `https://${ipAddress}:${port}`, colorLight: "#E0E0E0" });
     </script>
     </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
