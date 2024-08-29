@@ -5,6 +5,13 @@ const leftMouseButton = document.getElementById("left-click-button-input");
 const rightMouseButton = document.getElementById("right-click-button-input");
 const touchpad = document.getElementById("touchpad");
 
+const mouseSensitivityMinusButton = document.getElementById("mouse-sensitivity-multiplier-minus");
+const mouseSensitivityPlusButton = document.getElementById("mouse-sensitivity-multiplier-plus");
+const scrollSensitivityMinusButton = document.getElementById("scroll-sensitivity-multiplier-minus");
+const scrollSensitivityPlusButton = document.getElementById("scroll-sensitivity-multiplier-plus");
+const mouseSensitivityMultiplier = document.getElementById("mouse-sensitivity-multiplier");
+const scrollSensitivityMultiplier = document.getElementById("scroll-sensitivity-multiplier");
+
 let clickAllowed = true;
 
 const socket = io();
@@ -27,6 +34,64 @@ const postToServer = function (endpoint, data) {
     });
 };
 
+
+//=========================================== S E T T I N G S ===========================================
+
+const handleMouseSensitivityMinus = function (evt) {
+    let currValue = parseInt(mouseSensitivityMultiplier.innerHTML);
+    if (currValue > 1) {
+        mouseSensitivityMultiplier.innerHTML = currValue - 1;
+    }
+    //button state managements
+    if (currValue - 1 == 1) {
+        mouseSensitivityMinusButton.classList.add("disabled");
+    }
+    if (currValue == 9) {
+        mouseSensitivityPlusButton.classList.remove("disabled");
+    }
+};
+
+const handleMouseSensitivityPlus = function (evt) {
+    let currValue = parseInt(mouseSensitivityMultiplier.innerHTML);
+    if (currValue < 9) {
+        mouseSensitivityMultiplier.innerHTML = currValue + 1;
+    }
+    //button state managements
+    if (currValue + 1 == 9) {
+        mouseSensitivityPlusButton.classList.add("disabled");
+    }
+    if (currValue == 1) {
+        mouseSensitivityMinusButton.classList.remove("disabled");
+    }
+};
+
+const handleScrollSensitivityMinus = function (evt) {
+    let currValue = parseInt(scrollSensitivityMultiplier.innerHTML);
+    if (currValue > 1) {
+        scrollSensitivityMultiplier.innerHTML = currValue - 1;
+    }
+    //button state managements
+    if (currValue - 1 == 1) {
+        scrollSensitivityMinusButton.classList.add("disabled");
+    }
+    if (currValue == 9) {
+        scrollSensitivityPlusButton.classList.remove("disabled");
+    }
+};
+
+const handleScrollSensitivityPlus = function (evt) {
+    let currValue = parseInt(scrollSensitivityMultiplier.innerHTML);
+    if (currValue < 9) {
+        scrollSensitivityMultiplier.innerHTML = currValue + 1;
+    }
+    //button state managements
+    if (currValue + 1 == 9) {
+        scrollSensitivityPlusButton.classList.add("disabled");
+    }
+    if (currValue == 1) {
+        scrollSensitivityMinusButton.classList.remove("disabled");
+    }
+};
 
 
 //=========================================== K E Y B O A R D ===========================================
@@ -123,11 +188,11 @@ const handleTouchMove = function (evt) {
         const scrollThreshold = 5;
         if (touches.length == 1 && (Math.abs(deltaCoordinates.deltaX) >= moveThreshold || Math.abs(deltaCoordinates.deltaY) >= moveThreshold)) {
             //postToServer("/move-mouse", { x: deltaCoordinates.deltaX, y: deltaCoordinates.deltaY });
-            socket.emit("move-mouse", { "x": deltaCoordinates.deltaX, "y": deltaCoordinates.deltaY });
+            socket.emit("move-mouse", { "x": deltaCoordinates.deltaX, "y": deltaCoordinates.deltaY, "multiplier": parseInt(mouseSensitivityMultiplier.innerHTML) });
             pastCoordinates = currentCoordinates;
         }
         else if (touches.length == 2 && Math.abs(deltaCoordinates.deltaY) >= scrollThreshold) {
-            socket.emit("scrolling", { "y": deltaCoordinates.deltaY });
+            socket.emit("scrolling", { "y": deltaCoordinates.deltaY, "multiplier": parseInt(scrollSensitivityMultiplier.innerHTML) });
             pastCoordinates = currentCoordinates;
         }
     }
@@ -211,8 +276,6 @@ const getOperatingSystem = function () {
 
 const startup = function () {
     keyboard.addEventListener("focusout", handleKeyboardFocusOut);
-    leftMouseButton.addEventListener("click", handleLeftMouseButtonClick);
-    rightMouseButton.addEventListener("click", handleRightMouseButtonClick);
     const clientOS = getOperatingSystem();
     if (clientOS === "Android") {
         keyboard.addEventListener("focus", handleKeyboardFocusAndroid);
@@ -221,10 +284,18 @@ const startup = function () {
         keyboard.addEventListener("keydown", handleKeyDownIOS);
     }
 
+    leftMouseButton.addEventListener("click", handleLeftMouseButtonClick);
+    rightMouseButton.addEventListener("click", handleRightMouseButtonClick);
+
     touchpad.addEventListener("touchstart", handleTouchStart);
     touchpad.addEventListener("touchmove", handleTouchMove, { passive: false });
     touchpad.addEventListener("touchend", handleTouchEnd);
     touchpad.addEventListener("touchcancel", handleTouchCancel);
+
+    mouseSensitivityPlusButton.addEventListener("click", handleMouseSensitivityPlus);
+    mouseSensitivityMinusButton.addEventListener("click", handleMouseSensitivityMinus);
+    scrollSensitivityPlusButton.addEventListener("click", handleScrollSensitivityPlus);
+    scrollSensitivityMinusButton.addEventListener("click", handleScrollSensitivityMinus);
 };
 
 document.addEventListener("DOMContentLoaded", startup);

@@ -52,14 +52,16 @@ def click_response():
 
 @socketio.on("move-mouse")
 def handle_move_mouse(delta_coordinates):
-    x = int(delta_coordinates["x"])
-    y = int(delta_coordinates["y"])
+    multiplier = int(delta_coordinates["multiplier"])
+    x = int(delta_coordinates["x"]) * multiplier
+    y = int(delta_coordinates["y"]) * multiplier
     pyautogui.moveRel(xOffset=x, yOffset=y)
 
 
 @socketio.on("scrolling")
 def handle_scrolling(delta_coordinates):
-    y = int(delta_coordinates["y"]) * 2
+    multiplier = int(delta_coordinates["multiplier"])
+    y = int(delta_coordinates["y"]) * multiplier
     pyautogui.scroll(y)
 
 

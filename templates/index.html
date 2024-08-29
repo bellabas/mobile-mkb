@@ -10,12 +10,61 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"
         integrity="sha512-11t8Q+vY9JlCrr+PveZKTYJq8n7O09Y5X/pk/aMd3vJugSvu4xOunGEUzaADqL3I8cZKE/pBwwCfXzDkRJh2sQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+        integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+        integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.png') }}">
     <title>Mobile MKB</title>
 </head>
 
 <body>
+    <button type="button" id="settings-button-open" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-4" id="staticBackdropLabel">Settings</h1>
+                    <button type="button" id="settings-button-close" class="btn" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="modal-body d-flex flex-column">
+                    <h2 class="fs-5 d-flex justify-content-center">Adjust mouse sensitivity multiplier</h2>
+                    <div class="d-flex justify-content-around" id="mouse-sensitivity-adjustment-container">
+                        <button type="button" id="mouse-sensitivity-multiplier-minus"
+                            class="btn btn-secondary disabled">-</button>
+                        <div id="mouse-sensitivity-multiplier" class="fs-3">1</div>
+                        <button type="button" id="mouse-sensitivity-multiplier-plus"
+                            class="btn btn-secondary">+</button>
+                    </div>
+                    <h2 class="fs-5 d-flex justify-content-center">Adjust scroll sensitivity multiplier</h2>
+                    <div class="d-flex justify-content-around" id="scroll-sensitivity-adjustment-container">
+                        <button type="button" id="scroll-sensitivity-multiplier-minus"
+                            class="btn btn-secondary disabled">-</button>
+                        <div id="scroll-sensitivity-multiplier" class="fs-3">1</div>
+                        <button type="button" id="scroll-sensitivity-multiplier-plus"
+                            class="btn btn-secondary">+</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    mobile-mkb v1.1.0 developed by Barnabas Bella
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="touchpad"></div>
 
     <div id="keyboard-container">

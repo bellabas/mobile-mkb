@@ -12,13 +12,60 @@ body {
     background-color: var(--bg-primary-color);
 }
 
+/* Settings modal */
+#settings-button-open {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 1;
+    top: 2%;
+    right: 9.319%;
+    height: 5vh;
+    padding: 0;
+    border: 0;
+}
+
+#settings-button-close {
+    padding: 0;
+    border: 0;
+    margin-left: auto;
+}
+
+.bi-list,
+.bi-x-lg {
+    font-size: 2em;
+}
+
+.modal {
+    --bs-modal-bg: var(--bg-primary-color);
+    --bs-modal-header-border-color: var(--bg-primary-color);
+    --bs-modal-footer-border-color: var(--bg-secondary-color);
+    border-radius: 25px;
+}
+
+.modal-header {
+    padding: 4% 9.5%;
+}
+
+.fs-5 {
+    margin-bottom: 1rem;
+}
+
+#scroll-sensitivity-adjustment-container,
+#mouse-sensitivity-adjustment-container {
+    display: flex;
+    margin-bottom: 3rem;
+}
+
 /* Keyboard Container */
 #keyboard-container {
     position: fixed;
-    top: 2%;
+    top: 1rem;
     left: 25%;
     width: 50%;
-    height: 5%;
+    height: 5vh;
     z-index: 1;
     display: flex;
     justify-content: center;
@@ -65,10 +112,10 @@ body {
 /* Mouse Button Container */
 #mouse-button-container {
     position: fixed;
-    top: 93%;
+    bottom: 1rem;
     left: 25%;
     width: 50%;
-    height: 5%;
+    height: 5vh;
     z-index: 1;
     display: flex;
     justify-content: center;
@@ -149,7 +196,8 @@ body {
 
     #keyboard-container,
     #mouse-button-container,
-    #touchpad {
+    #touchpad,
+    #settings-button-open {
         display: none;
     }
 }
