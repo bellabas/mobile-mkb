@@ -8,6 +8,9 @@ const leftMouseButton = document.getElementById("left-click-button-input");
 const rightMouseButton = document.getElementById("right-click-button-input");
 const touchpad = document.getElementById("touchpad");
 
+const settingModal = document.getElementById("settings-modal");
+const openMenuButton = document.getElementById("settings-button-open");
+const closeMenuButton = document.getElementById("settings-button-close");
 const mouseSensitivityMinusButton = document.getElementById("mouse-sensitivity-multiplier-minus");
 const mouseSensitivityPlusButton = document.getElementById("mouse-sensitivity-multiplier-plus");
 const scrollSensitivityMinusButton = document.getElementById("scroll-sensitivity-multiplier-minus");
@@ -40,6 +43,15 @@ const postToServer = function (endpoint, data) {
 
 //=========================================== S E T T I N G S ===========================================
 
+const handleToggleMenuButton = function (evt) {
+    if (settingModal.classList.contains("modal-disabled")) {
+        settingModal.classList.remove("modal-disabled");
+    }
+    else {
+        settingModal.classList.add("modal-disabled");
+    }
+};
+
 const handleMinusButton = function (evt, htmlValueElement, htmlMinusButtonElement, htmlPlusButtonElement) {
     let currValue = parseInt(htmlValueElement.innerHTML);
     if (currValue > 1) {
@@ -48,10 +60,10 @@ const handleMinusButton = function (evt, htmlValueElement, htmlMinusButtonElemen
     }
     //button state managements
     if (currValue === 1) {
-        htmlMinusButtonElement.classList.add("disabled");
+        htmlMinusButtonElement.classList.add("disabled-button");
     }
-    if (currValue === 9) {
-        htmlPlusButtonElement.classList.remove("disabled");
+    if (currValue < 9) {
+        htmlPlusButtonElement.classList.remove("disabled-button");
     }
 };
 
@@ -63,10 +75,10 @@ const handlePlusButton = function (evt, htmlValueElement, htmlMinusButtonElement
     }
     //button state managements
     if (currValue === 9) {
-        htmlPlusButtonElement.classList.add("disabled");
+        htmlPlusButtonElement.classList.add("disabled-button");
     }
-    if (currValue === 1) {
-        htmlMinusButtonElement.classList.remove("disabled");
+    if (currValue > 1) {
+        htmlMinusButtonElement.classList.remove("disabled-button");
     }
 };
 
@@ -296,6 +308,9 @@ const getOperatingSystem = function () {
 };
 
 const startup = function () {
+    openMenuButton.addEventListener("click", handleToggleMenuButton);
+    closeMenuButton.addEventListener("click", handleToggleMenuButton);
+
     fullscreenButton.addEventListener("click", handleFullscreenButtonClick);
     document.documentElement.addEventListener("fullscreenchange", handleFullscreenChange);
 
