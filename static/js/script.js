@@ -1,6 +1,7 @@
 //=========================================== V A R I A B L E S ===========================================
 
 const keyboard = document.getElementById("keyboard-input");
+const keyboardButton = document.getElementById("keyboard-input-button");
 const leftMouseButton = document.getElementById("left-click-button-input");
 const rightMouseButton = document.getElementById("right-click-button-input");
 const touchpad = document.getElementById("touchpad");
@@ -70,6 +71,26 @@ const handlePlusButton = function (evt, htmlValueElement, htmlMinusButtonElement
 
 //=========================================== K E Y B O A R D ===========================================
 
+const handleKeyboardButtonClick = function (evt) {
+    keyboard.focus();
+    switchKeyboardIcon();
+};
+
+const switchKeyboardIcon = function () {
+    const svgIcons = keyboardButton.getElementsByTagName("svg");
+    for (let i = 0; i < svgIcons.length; i++) {
+        const currIcon = svgIcons[i];
+        if (currIcon.classList.contains("icon-disabled")) {
+            currIcon.classList.remove("icon-disabled");
+        }
+        else {
+            currIcon.classList.add("icon-disabled");
+        }
+    }
+};
+
+
+
 const handleKeyDownIOS = function (evt) {
     //alert(`keydown full: ${evt.target.value}`);
     //alert(`keydown evt.key: ${evt.key}`);
@@ -122,6 +143,7 @@ const findDiff = function (pastStr, currentStr) {
 
 const handleKeyboardFocusOut = function (evt) {
     clickAllowed = false;
+    switchKeyboardIcon();
 };
 
 
@@ -140,7 +162,8 @@ const handleTouchStart = function (evt) {
 
     pastCoordinates = startCoordinates;
 
-    removeKeyboardFocus();
+    //remove keyboard focus
+    keyboard.blur();
 };
 
 const handleTouchMove = function (evt) {
@@ -213,10 +236,6 @@ const resetTouchVariables = function () {
     startTouchId = null;
 };
 
-const removeKeyboardFocus = function () {
-    keyboard.blur();
-};
-
 
 
 //====================================== M O U S E  B U T T O N ======================================
@@ -249,6 +268,7 @@ const getOperatingSystem = function () {
 };
 
 const startup = function () {
+    keyboardButton.addEventListener("click", handleKeyboardButtonClick);
     keyboard.addEventListener("focusout", handleKeyboardFocusOut);
     const clientOS = getOperatingSystem();
     if (clientOS === "Android") {

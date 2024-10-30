@@ -84,6 +84,11 @@ input {
     width: 100%;
 }
 
+#keyboard-input {
+    position: absolute;
+    top: -1000px;
+}
+
 svg {
     max-height: 100%;
 }
