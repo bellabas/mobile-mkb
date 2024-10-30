@@ -37,59 +37,33 @@ const postToServer = function (endpoint, data) {
 
 //=========================================== S E T T I N G S ===========================================
 
-const handleMouseSensitivityMinus = function (evt) {
-    let currValue = parseInt(mouseSensitivityMultiplier.innerHTML);
+const handleMinusButton = function (evt, htmlValueElement, htmlMinusButtonElement, htmlPlusButtonElement) {
+    let currValue = parseInt(htmlValueElement.innerHTML);
     if (currValue > 1) {
-        mouseSensitivityMultiplier.innerHTML = currValue - 1;
+        currValue -= 1;
+        htmlValueElement.innerHTML = currValue;
     }
     //button state managements
-    if (currValue - 1 == 1) {
-        mouseSensitivityMinusButton.classList.add("disabled");
+    if (currValue === 1) {
+        htmlMinusButtonElement.classList.add("disabled");
     }
-    if (currValue == 9) {
-        mouseSensitivityPlusButton.classList.remove("disabled");
+    if (currValue === 9) {
+        htmlPlusButtonElement.classList.remove("disabled");
     }
 };
 
-const handleMouseSensitivityPlus = function (evt) {
-    let currValue = parseInt(mouseSensitivityMultiplier.innerHTML);
+const handlePlusButton = function (evt, htmlValueElement, htmlMinusButtonElement, htmlPlusButtonElement) {
+    let currValue = parseInt(htmlValueElement.innerHTML);
     if (currValue < 9) {
-        mouseSensitivityMultiplier.innerHTML = currValue + 1;
+        currValue += 1;
+        htmlValueElement.innerHTML = currValue;
     }
     //button state managements
-    if (currValue + 1 == 9) {
-        mouseSensitivityPlusButton.classList.add("disabled");
+    if (currValue === 9) {
+        htmlPlusButtonElement.classList.add("disabled");
     }
-    if (currValue == 1) {
-        mouseSensitivityMinusButton.classList.remove("disabled");
-    }
-};
-
-const handleScrollSensitivityMinus = function (evt) {
-    let currValue = parseInt(scrollSensitivityMultiplier.innerHTML);
-    if (currValue > 1) {
-        scrollSensitivityMultiplier.innerHTML = currValue - 1;
-    }
-    //button state managements
-    if (currValue - 1 == 1) {
-        scrollSensitivityMinusButton.classList.add("disabled");
-    }
-    if (currValue == 9) {
-        scrollSensitivityPlusButton.classList.remove("disabled");
-    }
-};
-
-const handleScrollSensitivityPlus = function (evt) {
-    let currValue = parseInt(scrollSensitivityMultiplier.innerHTML);
-    if (currValue < 9) {
-        scrollSensitivityMultiplier.innerHTML = currValue + 1;
-    }
-    //button state managements
-    if (currValue + 1 == 9) {
-        scrollSensitivityPlusButton.classList.add("disabled");
-    }
-    if (currValue == 1) {
-        scrollSensitivityMinusButton.classList.remove("disabled");
+    if (currValue === 1) {
+        htmlMinusButtonElement.classList.remove("disabled");
     }
 };
 
@@ -292,10 +266,10 @@ const startup = function () {
     touchpad.addEventListener("touchend", handleTouchEnd);
     touchpad.addEventListener("touchcancel", handleTouchCancel);
 
-    mouseSensitivityPlusButton.addEventListener("click", handleMouseSensitivityPlus);
-    mouseSensitivityMinusButton.addEventListener("click", handleMouseSensitivityMinus);
-    scrollSensitivityPlusButton.addEventListener("click", handleScrollSensitivityPlus);
-    scrollSensitivityMinusButton.addEventListener("click", handleScrollSensitivityMinus);
+    mouseSensitivityPlusButton.addEventListener("click", (evt) => { handlePlusButton(evt, mouseSensitivityMultiplier, mouseSensitivityMinusButton, mouseSensitivityPlusButton) });
+    mouseSensitivityMinusButton.addEventListener("click", (evt) => { handleMinusButton(evt, mouseSensitivityMultiplier, mouseSensitivityMinusButton, mouseSensitivityPlusButton) });
+    scrollSensitivityPlusButton.addEventListener("click", (evt) => { handlePlusButton(evt, scrollSensitivityMultiplier, scrollSensitivityMinusButton, scrollSensitivityPlusButton) });
+    scrollSensitivityMinusButton.addEventListener("click", (evt) => { handleMinusButton(evt, scrollSensitivityMultiplier, scrollSensitivityMinusButton, scrollSensitivityPlusButton) });
 };
 
 document.addEventListener("DOMContentLoaded", startup);

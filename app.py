@@ -73,4 +73,4 @@ def error_handler(e):
 if __name__ == "__main__":
     webbrowser.open(f"https://{IP_ADDRESS}:{PORT}", new=0, autoraise=True)
     socketio.run(app, host=IP_ADDRESS, port=PORT,
-                 debug=False, allow_unsafe_werkzeug=True, ssl_context="adhoc")
+                 debug=True, allow_unsafe_werkzeug=True, ssl_context="adhoc")

@@ -1,163 +1,135 @@
 :root {
-    --bg-primary-color: #E0E0E0;
+    --bg-primary-color: #9E9E9E;
     --bg-secondary-color: #BDBDBD;
-    --bg-secondary-active-color: #9E9E9E;
+    --bg-secondary-active-color: #E0E0E0;
     --border-color: #000000;
+    --bar-padding-big: 1.5rem;
+    --bar-padding-small: 0.8rem;
+    --default-line-height: 1.15;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
 }
 
 html,
-body {
-    margin: 0;
+body,
+#desktop-elements,
+#mobile-elements {
     height: 100%;
     background-color: var(--bg-primary-color);
 }
 
-/* Settings modal */
-#settings-button-open {
-    position: fixed;
+#mobile-elements {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    z-index: 1;
-    top: 2%;
-    right: 9.319%;
-    height: 5vh;
-    padding: 0;
-    border: 0;
+    flex-direction: column;
 }
 
-#settings-button-close {
-    padding: 0;
-    border: 0;
-    margin-left: auto;
-}
-
-.bi-list,
-.bi-x-lg {
-    font-size: 2em;
-}
-
-.modal {
-    --bs-modal-bg: var(--bg-primary-color);
-    --bs-modal-header-border-color: var(--bg-primary-color);
-    --bs-modal-footer-border-color: var(--bg-secondary-color);
-    border-radius: 25px;
-}
-
-.modal-header {
-    padding: 4% 9.5%;
-}
-
-.fs-5 {
-    margin-bottom: 1rem;
-}
-
-#scroll-sensitivity-adjustment-container,
-#mouse-sensitivity-adjustment-container {
+#top-bar,
+#bottom-bar {
     display: flex;
-    margin-bottom: 3rem;
+    justify-content: space-around;
 }
 
-/* Keyboard Container */
-#keyboard-container {
-    position: fixed;
-    top: 1rem;
-    left: 25%;
-    width: 50%;
-    height: 5vh;
-    z-index: 1;
+#top-bar {
+    padding: var(--bar-padding-big) 0 var(--bar-padding-small) 0;
+}
+
+#bottom-bar {
+    padding: var(--bar-padding-small) 0 var(--bar-padding-big) 0;
+}
+
+.bar-container {
+    width: 80%;
+    height: 2.5rem;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
-#keyboard-input {
-    position: relative;
+#touchpad {
     height: 100%;
-    width: 100%;
-    border-radius: 25px;
-    border: 1px solid var(--border-color);
-    padding: 0;
-    text-align: center;
+    border-radius: 20px;
+    border: var(--border-color) solid 2px;
+    margin: 0 0.5rem;
     background-color: var(--bg-secondary-color);
-    color: transparent;
-    caret-color: transparent;
 }
 
-#keyboard-input:focus {
-    outline: none;
-    box-shadow: none;
-    border: 2px solid var(--border-color);
-    background-color: var(--bg-secondary-active-color);
+button,
+input {
+    padding: 0;
 }
 
-#keyboard-overlay-text {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+#top-bar button {
+    background-color: var(--bg-primary-color);
+    border: none;
+}
+
+.bar-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
-    pointer-events: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    width: 40px;
 }
 
-#keyboard-input:focus+#keyboard-overlay-text {
-    font-weight: bolder;
+#keyboard-container {
+    width: 100px;
 }
 
-/* Mouse Button Container */
-#mouse-button-container {
-    position: fixed;
-    bottom: 1rem;
-    left: 25%;
-    width: 50%;
-    height: 5vh;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#keyboard-container * {
+    width: 100%;
+}
+
+svg {
+    max-height: 100%;
+}
+
+.icon-disabled {
+    display: none;
 }
 
 .mouse-button-input {
-    width: 100%;
+    width: 37%;
     height: 100%;
-    border: 0;
-    padding: 0;
-    border: 1px solid var(--border-color);
+
+    outline: none;
+    box-shadow: none;
     background-color: var(--bg-secondary-color);
+    border: var(--border-color) solid 2px;
 }
 
 .mouse-button-input:active {
-    outline: none;
-    box-shadow: none;
-    border: 2px solid var(--border-color);
     background-color: var(--bg-secondary-active-color);
 }
 
 #left-click-button-input {
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 #right-click-button-input {
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
 }
 
-/* Touchpad */
-#touchpad {
-    width: 100%;
-    height: 100%;
-    background-color: var(--bg-primary-color);
+.modal-disabled {
+    display: none;
 }
 
-/* IP Address Container */
+.modal-active {
+    display: block;
+}
+
+#desktop-elements,
 #ip-address-container {
-    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -166,38 +138,26 @@ body {
     text-align: center;
 }
 
-#ip-address-text,
-#ip-address {
-    margin: 0;
-    width: 80%;
-}
-
-#ip-address {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+#ip-address-container {
+    width: 53%;
 }
 
 #ip-address-text {
-    font-size: 3em;
-    margin-bottom: 0.5em;
+    font-size: 3rem;
+    margin-bottom: 3rem;
 }
 
 /* Mobile */
-@media screen and (max-width: 600px) and (orientation: portrait) {
-    #ip-address-container {
+@media screen and (max-width: 991px) {
+    #desktop-elements {
         display: none;
     }
 }
 
 /* Desktop */
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 992px) {
 
-    #keyboard-container,
-    #mouse-button-container,
-    #touchpad,
-    #settings-button-open {
+    #mobile-elements {
         display: none;
     }
 }
