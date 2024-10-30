@@ -1,5 +1,7 @@
 //=========================================== V A R I A B L E S ===========================================
 
+const fullscreenButton = document.getElementById("fullscreen-mode-button");
+
 const keyboard = document.getElementById("keyboard-input");
 const keyboardButton = document.getElementById("keyboard-input-button");
 const leftMouseButton = document.getElementById("left-click-button-input");
@@ -68,16 +70,10 @@ const handlePlusButton = function (evt, htmlValueElement, htmlMinusButtonElement
     }
 };
 
+//=========================================== M I S C =======================================================
 
-//=========================================== K E Y B O A R D ===========================================
-
-const handleKeyboardButtonClick = function (evt) {
-    keyboard.focus();
-    switchKeyboardIcon();
-};
-
-const switchKeyboardIcon = function () {
-    const svgIcons = keyboardButton.getElementsByTagName("svg");
+const switchButtonIcon = function (buttonElement) {
+    const svgIcons = buttonElement.getElementsByTagName("svg");
     for (let i = 0; i < svgIcons.length; i++) {
         const currIcon = svgIcons[i];
         if (currIcon.classList.contains("icon-disabled")) {
@@ -90,6 +86,38 @@ const switchKeyboardIcon = function () {
 };
 
 
+//=========================================== F U L L S C R E E N ===========================================
+
+const handleFullscreenButtonClick = function (evt) {
+    if (!(document.fullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || document.webkitFullscreenElement)) {
+        const docElem = document.documentElement;
+        if (docElem.requestFullscreen) {
+            docElem.requestFullscreen();
+        } else if (docElem.webkitRequestFullscreen) {
+            /* Safari */
+            docElem.webkitRequestFullscreen();
+        } else if (docElem.msRequestFullscreen) {
+            /* IE11 */
+            docElem.msRequestFullscreen();
+        }
+
+    } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+    }
+};
+
+const handleFullscreenChange = function (evt) {
+    switchButtonIcon(fullscreenButton);
+};
+
+
+
+//=========================================== K E Y B O A R D ===========================================
+
+const handleKeyboardButtonClick = function (evt) {
+    keyboard.focus();
+    switchButtonIcon(keyboardButton);
+};
 
 const handleKeyDownIOS = function (evt) {
     //alert(`keydown full: ${evt.target.value}`);
@@ -143,7 +171,7 @@ const findDiff = function (pastStr, currentStr) {
 
 const handleKeyboardFocusOut = function (evt) {
     clickAllowed = false;
-    switchKeyboardIcon();
+    switchButtonIcon(keyboardButton);
 };
 
 
@@ -268,6 +296,9 @@ const getOperatingSystem = function () {
 };
 
 const startup = function () {
+    fullscreenButton.addEventListener("click", handleFullscreenButtonClick);
+    document.documentElement.addEventListener("fullscreenchange", handleFullscreenChange);
+
     keyboardButton.addEventListener("click", handleKeyboardButtonClick);
     keyboard.addEventListener("focusout", handleKeyboardFocusOut);
     const clientOS = getOperatingSystem();
