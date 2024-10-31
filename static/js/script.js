@@ -57,6 +57,7 @@ const handleMinusButton = function (evt, htmlValueElement, htmlMinusButtonElemen
     if (currValue > 1) {
         currValue -= 1;
         htmlValueElement.innerHTML = currValue;
+        postToServer("/multiplier-change", { "mouseMultiplier": parseInt(mouseSensitivityMultiplier.innerHTML), "scrollMultiplier": parseInt(scrollSensitivityMultiplier.innerHTML) })
     }
     //button state managements
     if (currValue === 1) {
@@ -72,6 +73,7 @@ const handlePlusButton = function (evt, htmlValueElement, htmlMinusButtonElement
     if (currValue < 9) {
         currValue += 1;
         htmlValueElement.innerHTML = currValue;
+        postToServer("/multiplier-change", { "mouseMultiplier": parseInt(mouseSensitivityMultiplier.innerHTML), "scrollMultiplier": parseInt(scrollSensitivityMultiplier.innerHTML) })
     }
     //button state managements
     if (currValue === 9) {
@@ -79,6 +81,23 @@ const handlePlusButton = function (evt, htmlValueElement, htmlMinusButtonElement
     }
     if (currValue > 1) {
         htmlMinusButtonElement.classList.remove("disabled-button");
+    }
+};
+
+const checkSettingsButtonAvailability = function (evt) {
+    const mouseValue = parseInt(mouseSensitivityMultiplier.innerHTML);
+    const scrollValue = parseInt(scrollSensitivityMultiplier.innerHTML);
+    if (mouseValue < 2) {
+        mouseSensitivityMinusButton.classList.add("disabled-button");
+    }
+    else if (mouseValue > 8) {
+        mouseSensitivityPlusButton.classList.add("disabled-button");
+    }
+    if (scrollValue < 2) {
+        scrollSensitivityMinusButton.classList.add("disabled-button");
+    }
+    else if (scrollValue > 8) {
+        scrollSensitivityPlusButton.classList.add("disabled-button");
     }
 };
 
@@ -225,11 +244,11 @@ const handleTouchMove = function (evt) {
         const scrollThreshold = 5;
         if (touches.length == 1 && (Math.abs(deltaCoordinates.deltaX) >= moveThreshold || Math.abs(deltaCoordinates.deltaY) >= moveThreshold)) {
             //postToServer("/move-mouse", { x: deltaCoordinates.deltaX, y: deltaCoordinates.deltaY });
-            socket.emit("move-mouse", { "x": deltaCoordinates.deltaX, "y": deltaCoordinates.deltaY, "multiplier": parseInt(mouseSensitivityMultiplier.innerHTML) });
+            socket.emit("move-mouse", { "x": deltaCoordinates.deltaX, "y": deltaCoordinates.deltaY });
             pastCoordinates = currentCoordinates;
         }
         else if (touches.length == 2 && Math.abs(deltaCoordinates.deltaY) >= scrollThreshold) {
-            socket.emit("scrolling", { "y": deltaCoordinates.deltaY, "multiplier": parseInt(scrollSensitivityMultiplier.innerHTML) });
+            socket.emit("scrolling", { "y": deltaCoordinates.deltaY });
             pastCoordinates = currentCoordinates;
         }
     }
@@ -308,6 +327,7 @@ const getOperatingSystem = function () {
 };
 
 const startup = function () {
+    window.addEventListener("load", checkSettingsButtonAvailability);
     openMenuButton.addEventListener("click", handleToggleMenuButton);
     closeMenuButton.addEventListener("click", handleToggleMenuButton);
 

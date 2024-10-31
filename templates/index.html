@@ -112,7 +112,7 @@
                             <h2 class="modal-body-item-title">Adjust mouse sensitivity multiplier</h2>
                             <div class="modal-body-item-content">
                                 <button type="button" id="mouse-sensitivity-multiplier-minus"
-                                    class="settings-button disabled-button">&minus;</button>
+                                    class="settings-button">&minus;</button>
                                 <div id="mouse-sensitivity-multiplier" class="multiplier-number">1</div>
                                 <button type="button" id="mouse-sensitivity-multiplier-plus"
                                     class="settings-button">&plus;</button>
@@ -122,7 +122,7 @@
                             <h2 class="modal-body-item-title">Adjust scroll sensitivity multiplier</h2>
                             <div class="modal-body-item-content">
                                 <button type="button" id="scroll-sensitivity-multiplier-minus"
-                                    class="settings-button disabled-button">&minus;</button>
+                                    class="settings-button">&minus;</button>
                                 <div id="scroll-sensitivity-multiplier" class="multiplier-number">1</div>
                                 <button type="button" id="scroll-sensitivity-multiplier-plus"
                                     class="settings-button">&plus;</button>
@@ -148,8 +148,12 @@
     </div>
 
     <script>
-        const ipAddress = {{ IP_ADDRESS| tojson }}
-        const port = {{ PORT| tojson }}
+        const ipAddress = {{ IP_ADDRESS| tojson }};
+        const port = {{ PORT| tojson }};
+        const mouseMultiplier = {{ MOUSE_MULTIPLIER| tojson }};
+        const scrollMultiplier = {{ SCROLL_MULTIPLIER| tojson }};
+        document.getElementById("mouse-sensitivity-multiplier").innerHTML = mouseMultiplier;
+        document.getElementById("scroll-sensitivity-multiplier").innerHTML = scrollMultiplier;
         const qrcode = new QRCode(document.getElementById("ip-address"), { text: `https://${ipAddress}:${port}`, colorLight: "#9E9E9E" });
     </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>

@@ -2,6 +2,7 @@ import socket
 import webbrowser
 import secrets
 import pyautogui
+import json
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
 
@@ -9,6 +10,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex()
 socketio = SocketIO(app, async_mode="threading")
 pyautogui.FAILSAFE = False
+
+IP_ADDRESS = ""
+PORT = 5000
+mouse_multiplier = 0
+scroll_multiplier = 0
 
 
 def get_ipv4_address():
@@ -18,13 +24,23 @@ def get_ipv4_address():
     return ipv4_address
 
 
-IP_ADDRESS = get_ipv4_address()
-PORT = 5000
+def load_settings():
+    global mouse_multiplier
+    global scroll_multiplier
+    try:
+        with open("settings.json", "r") as file:
+            data = json.load(file)
+            mouse_multiplier = data.get("mouseMultiplier")
+            scroll_multiplier = data.get("scrollMultiplier")
+    except Exception:
+        mouse_multiplier = 1
+        scroll_multiplier = 1
 
 
 @app.route("/")
 def index():
-    return render_template("index.html", IP_ADDRESS=IP_ADDRESS, PORT=PORT)
+    return render_template("index.html", IP_ADDRESS=IP_ADDRESS, PORT=PORT,
+                           MOUSE_MULTIPLIER=mouse_multiplier, SCROLL_MULTIPLIER=scroll_multiplier)
 
 
 @app.post("/type-character")
@@ -50,18 +66,32 @@ def click_response():
     return "Ok"
 
 
+@app.post("/multiplier-change")
+def multiplier_change():
+    global mouse_multiplier
+    global scroll_multiplier
+    try:
+        mouse_multiplier = request.form.get("mouseMultiplier", type=int)
+        scroll_multiplier = request.form.get("scrollMultiplier", type=int)
+        jsonData = json.dumps(
+            {"mouseMultiplier": mouse_multiplier, "scrollMultiplier": scroll_multiplier})
+        with open("settings.json", "w") as file:
+            file.write(jsonData)
+    except Exception:
+        return "Bad request"
+    return "Ok"
+
+
 @socketio.on("move-mouse")
 def handle_move_mouse(delta_coordinates):
-    multiplier = int(delta_coordinates["multiplier"])
-    x = int(delta_coordinates["x"]) * multiplier
-    y = int(delta_coordinates["y"]) * multiplier
+    x = int(delta_coordinates["x"]) * mouse_multiplier
+    y = int(delta_coordinates["y"]) * mouse_multiplier
     pyautogui.moveRel(xOffset=x, yOffset=y)
 
 
 @socketio.on("scrolling")
 def handle_scrolling(delta_coordinates):
-    multiplier = int(delta_coordinates["multiplier"])
-    y = int(delta_coordinates["y"]) * multiplier
+    y = int(delta_coordinates["y"]) * scroll_multiplier
     pyautogui.scroll(y)
 
 
@@ -71,6 +101,8 @@ def error_handler(e):
 
 
 if __name__ == "__main__":
+    IP_ADDRESS = get_ipv4_address()
+    load_settings()
     webbrowser.open(f"https://{IP_ADDRESS}:{PORT}", new=0, autoraise=True)
     socketio.run(app, host=IP_ADDRESS, port=PORT,
                  debug=True, allow_unsafe_werkzeug=True, ssl_context="adhoc")
