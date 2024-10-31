@@ -1,113 +1,231 @@
-html,
-body {
+:root {
+    --bg-primary-color: #9E9E9E;
+    --bg-secondary-color: #BDBDBD;
+    --bg-secondary-active-color: #E0E0E0;
+    --border-color: #000000;
+    --bar-padding-big: 1.5rem;
+    --bar-padding-small: 0.8rem;
+    --default-line-height: 1.15;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     margin: 0;
+}
+
+html,
+body,
+#desktop-elements,
+#mobile-elements {
     height: 100%;
-    background-color: #808080;
+    background-color: var(--bg-primary-color);
+}
+
+#mobile-elements {
+    display: flex;
+    flex-direction: column;
+}
+
+#top-bar,
+#bottom-bar {
+    display: flex;
+    justify-content: space-around;
+}
+
+#top-bar {
+    padding: var(--bar-padding-big) 0 var(--bar-padding-small) 0;
+}
+
+#bottom-bar {
+    padding: var(--bar-padding-small) 0 var(--bar-padding-big) 0;
+}
+
+.bar-container {
+    width: 80%;
+    height: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#touchpad {
+    height: 100%;
+    border-radius: 20px;
+    border: var(--border-color) solid 2px;
+    margin: 0 0.5rem;
+    background-color: var(--bg-secondary-color);
+}
+
+button,
+input {
+    padding: 0;
+}
+
+#top-bar button {
+    background-color: var(--bg-primary-color);
+    border: none;
+}
+
+.bar-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 40px;
 }
 
 #keyboard-container {
-    position: fixed;
-    top: 2%;
-    left: 25%;
-    width: 50%;
-    height: 5%;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100px;
+}
+
+#keyboard-container * {
+    width: 100%;
 }
 
 #keyboard-input {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    border-radius: 25px;
-    border: 1px solid black;
-    padding: 0px;
-    text-align: center;
-    background-color: #808080;
-    color: transparent;
-    z-index: 2;
-    caret-color: transparent;
-
-    /* user-select: none;
-    text-decoration: none;
-    cursor: default; */
-}
-
-#keyboard-input:focus {
-    outline: none;
-    box-shadow: none;
-    border: 2px solid black;
-    background-color: #696969;
-    /* cursor: default; */
-}
-
-#keyboard-overlay-text {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -1000px;
+}
+
+svg {
+    max-height: 100%;
     width: 100%;
     height: 100%;
-    z-index: 3;
-    pointer-events: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    fill: var(--border-color);
 }
 
-#keyboard-input:focus+#keyboard-overlay-text {
-    font-weight: bolder;
-}
-
-#mouse-button-container {
-    position: fixed;
-    top: 93%;
-    left: 25%;
-    width: 50%;
-    height: 5%;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.icon-disabled {
+    display: none;
 }
 
 .mouse-button-input {
-    width: 100%;
+    width: 37%;
     height: 100%;
-    border: 0;
-    padding: 0;
-    border: 1px solid black;
-    background-color: #808080;
+
+    outline: none;
+    box-shadow: none;
+    background-color: var(--bg-secondary-color);
+    border: var(--border-color) solid 2px;
 }
 
 .mouse-button-input:active {
-    outline: none;
-    box-shadow: none;
-    border: 2px solid black;
-    background-color: #696969;
-    /* cursor: default; */
+    background-color: var(--bg-secondary-active-color);
 }
 
 #left-click-button-input {
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 #right-click-button-input {
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
 }
 
-#touchpad {
+/* Modal */
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: var(--bg-secondary-color);
     width: 100%;
     height: 100%;
-    background-color: #a9a9a9;
+    max-height: 100%;
 }
 
-#ip-address-container {
+.settings-button {
+    background-color: var(--bg-secondary-active-color);
+    width: 30px;
+    height: 30px;
+    border-width: 1px;
+    border-color: var(--border-color);
+    border-style: solid;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: 0;
+    padding-inline: 0;
+}
+
+.disabled-button {
+    background-color: rgba(0, 0, 0, 0.05)
+}
+
+#settings-button-close-container {
+    position: fixed;
+    z-index: 2;
+    top: var(--bar-padding-big);
+    left: 10%;
+    height: 2.5rem;
+    width: 40px;
+}
+
+#settings-button-close {
     width: 100%;
+    height: 100%;
+    background-color: var(--bg-secondary-color);
+    border: none;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 80%;
+    height: 100%;
+    max-height: 100%;
+}
+
+.modal-header {
+    padding-top: calc(2 * var(--bar-padding-big) + 2 * var(--bar-padding-small));
+}
+
+.modal-body-item {
+    padding-bottom: calc(var(--bar-padding-big) + var(--bar-padding-small));
+}
+
+.modal-body-item-title {
+    padding-bottom: var(--bar-padding-small);
+}
+
+.modal-body-item-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.multiplier-number {
+    font-size: large;
+    font-weight: 400;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    padding-bottom: calc(var(--bar-padding-big) + var(--bar-padding-small));
+}
+
+.modal-disabled {
+    display: none;
+}
+
+/* Desktop */
+
+#desktop-elements,
+#ip-address-container {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -116,42 +234,26 @@ body {
     text-align: center;
 }
 
-#ip-address-text,
-#ip-address {
-    margin: 0px;
-    width: 80%;
-}
-
-#ip-address {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+#ip-address-container {
+    width: 53%;
 }
 
 #ip-address-text {
-    font-size: 3em;
-    margin-bottom: 0.5em;
+    font-size: 3rem;
+    margin-bottom: 3rem;
 }
 
-/* mobile */
-@media screen and (max-width: 600px) and (orientation: portrait) {
-    #ip-address-container {
+/* Mobile */
+@media screen and (max-width: 991px) {
+    #desktop-elements {
         display: none;
     }
 }
 
-/* desktop */
-@media screen and (min-width: 600px) {
-    #keyboard-container {
-        display: none;
-    }
+/* Desktop */
+@media screen and (min-width: 992px) {
 
-    #mouse-button-container {
-        display: none;
-    }
-
-    #touchpad {
+    #mobile-elements {
         display: none;
     }
 }

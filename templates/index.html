@@ -10,35 +10,151 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"
         integrity="sha512-11t8Q+vY9JlCrr+PveZKTYJq8n7O09Y5X/pk/aMd3vJugSvu4xOunGEUzaADqL3I8cZKE/pBwwCfXzDkRJh2sQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.png') }}">
     <title>Mobile MKB</title>
 </head>
 
 <body>
-    <div id="touchpad"></div>
+    <div id="mobile-elements">
+        <div id="top-bar">
+            <div class="bar-container">
+                <button type="button" id="settings-button-open" class="bar-icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill="currentColor" class="bi bi-list"
+                        viewBox="0 0 1080 1080">
+                        <path fill-rule="evenodd"
+                            d="M4.135 1018.44c0-33.03 21.81-59.805 48.715-59.805h974.3c26.905 0 48.715 26.776 48.715 59.805 0 33.03-21.81 59.805-48.715 59.805H52.85c-26.905 0-48.715-26.776-48.715-59.805m0-478.44c0-33.03 21.81-59.805 48.715-59.805h974.3c26.905 0 48.715 26.776 48.715 59.805 0 33.03-21.81 59.805-48.715 59.805H52.85c-26.905 0-48.715-26.776-48.715-59.805m0-478.44c0-33.03 21.81-59.805 48.715-59.805h974.3c26.905 0 48.715 26.776 48.715 59.805 0 33.03-21.81 59.805-48.715 59.805H52.85c-26.905 0-48.715-26.776-48.715-59.805" />
+                    </svg>
+                </button>
 
-    <div id="keyboard-container">
-        <input type="text" name="keyboard-input" id="keyboard-input" autocapitalize="none" autocomplete="off"
-            autocorrect="off" spellcheck="false">
-        <span id="keyboard-overlay-text">KEYBOARD</span>
+                <div id="keyboard-container" class="bar-icon-container">
+                    <button type="button" id="keyboard-input-button" class="bar-icon-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill="currentColor"
+                            class="bi bi-keyboard" viewBox="0 0 602 342">
+                            <rect width="100%" height="100%" fill="transparent" />
+                            <g>
+                                <path
+                                    d="M524.86 38.93c20.606 0 37.31 16.83 37.31 37.59v187.95c0 20.76-16.704 37.59-37.31 37.59H77.14c-20.606 0-37.31-16.83-37.31-37.59V76.52c0-20.76 16.704-37.59 37.31-37.59zM77.14 1.34C35.929 1.34 2.52 35 2.52 76.52v187.95c0 41.52 33.409 75.18 74.62 75.18h447.72c41.211 0 74.62-33.66 74.62-75.18V76.52c0-41.52-33.409-75.18-74.62-75.18z"
+                                    vector-effect="non-scaling-stroke" />
+                                <path
+                                    d="M487.55 236.277c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.796c0 5.19-4.176 9.397-9.327 9.397h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm0-75.18c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm-186.55 0c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm74.62 0c0-5.19 4.176-9.397 9.327-9.397h55.966c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-55.966c-5.15 0-9.327-4.207-9.327-9.398zm37.31 75.18c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.796c0 5.19-4.176 9.397-9.327 9.397h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm-186.55-75.18c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm-74.62 0c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm-74.62 0c0-5.19 4.176-9.397 9.327-9.397h18.655c5.152 0 9.328 4.207 9.328 9.397v18.795c0 5.19-4.176 9.398-9.328 9.398H86.467c-5.15 0-9.327-4.207-9.327-9.398zm410.41-75.18c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm-74.62 0c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm-74.62 0c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm-74.62 0c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm-74.62 0c0-5.19 4.176-9.397 9.327-9.397h18.656c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398h-18.656c-5.15 0-9.327-4.207-9.327-9.398zm-111.93 0c0-5.19 4.176-9.397 9.327-9.397h55.966c5.15 0 9.327 4.207 9.327 9.397v18.795c0 5.19-4.176 9.398-9.327 9.398H86.466c-5.15 0-9.327-4.207-9.327-9.398zm0 150.36c0-5.19 4.176-9.397 9.327-9.397h18.655c5.152 0 9.328 4.207 9.328 9.397v18.796c0 5.19-4.176 9.397-9.328 9.397H86.467c-5.15 0-9.327-4.207-9.327-9.398zm74.62 0c0-5.19 4.176-9.397 9.327-9.397h205.206c5.15 0 9.327 4.207 9.327 9.397v18.796c0 5.19-4.176 9.397-9.327 9.397H161.087c-5.15 0-9.327-4.207-9.327-9.398z"
+                                    vector-effect="non-scaling-stroke" />
+                            </g>
+                        </svg>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill="currentColor"
+                            class="bi bi-keyboard-fill icon-disabled" viewBox="0 0 602 342">
+                            <rect width="100%" height="100%" fill="transparent" />
+                            <path
+                                d="M2.44 76.675C2.44 35 35.857 1.215 77.08 1.215h447.84c41.223 0 74.64 33.785 74.64 75.46v188.65c0 41.675-33.417 75.46-74.64 75.46H77.08c-41.223 0-74.64-33.785-74.64-75.46zm485.16 9.432v18.865c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433V86.108c0-5.209-4.177-9.432-9.33-9.432h-18.66c-5.153 0-9.33 4.223-9.33 9.432M86.41 152.135c-5.153 0-9.33 4.223-9.33 9.433v18.864c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433v-18.864c0-5.21-4.177-9.433-9.33-9.433zm65.31 9.433v18.864c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433v-18.864c0-5.21-4.177-9.433-9.33-9.433h-18.66c-5.153 0-9.33 4.223-9.33 9.433m83.97-9.433c-5.153 0-9.33 4.223-9.33 9.433v18.864c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433v-18.864c0-5.21-4.177-9.433-9.33-9.433zm65.31 9.433v18.864c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433v-18.864c0-5.21-4.177-9.433-9.33-9.433h-18.66c-5.153 0-9.33 4.223-9.33 9.433m195.93-9.433c-5.153 0-9.33 4.223-9.33 9.433v18.864c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433v-18.864c0-5.21-4.177-9.433-9.33-9.433zm0 75.46c-5.153 0-9.33 4.223-9.33 9.432v18.865c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433v-18.865c0-5.209-4.177-9.432-9.33-9.432zm-111.96-75.46c-5.153 0-9.33 4.223-9.33 9.433v18.864c0 5.207 4.18 9.433 9.33 9.433h55.98c5.153 0 9.33-4.223 9.33-9.433v-18.864c0-5.21-4.177-9.433-9.33-9.433zm27.99 84.892v18.865c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433v-18.865c0-5.209-4.177-9.432-9.33-9.432h-18.66c-5.153 0-9.33 4.223-9.33 9.432m9.33-160.352c-5.153 0-9.33 4.223-9.33 9.432v18.865c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433V86.108c0-5.209-4.177-9.432-9.33-9.432zm-83.97 9.432v18.865c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433V86.108c0-5.209-4.177-9.432-9.33-9.432h-18.66c-5.153 0-9.33 4.223-9.33 9.432m-65.31-9.432c-5.153 0-9.33 4.223-9.33 9.432v18.865c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433V86.108c0-5.209-4.177-9.432-9.33-9.432zm-83.97 9.432v18.865c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433V86.108c0-5.209-4.177-9.432-9.33-9.432h-18.66c-5.153 0-9.33 4.223-9.33 9.432M86.41 76.675c-5.153 0-9.33 4.223-9.33 9.432v18.865c0 5.207 4.18 9.433 9.33 9.433h55.98c5.153 0 9.33-4.223 9.33-9.433V86.108c0-5.209-4.177-9.432-9.33-9.432zm-9.33 160.352v18.865c0 5.207 4.18 9.433 9.33 9.433h18.66c5.153 0 9.33-4.223 9.33-9.433v-18.865c0-5.209-4.177-9.432-9.33-9.432H86.41c-5.153 0-9.33 4.223-9.33 9.432m83.97-9.432c-5.153 0-9.33 4.223-9.33 9.432v18.865c0 5.207 4.18 9.433 9.33 9.433h205.26c5.153 0 9.33-4.223 9.33-9.433v-18.865c0-5.209-4.177-9.432-9.33-9.432z" />
+                        </svg>
+                    </button>
+
+                    <input type="text" id="keyboard-input" autocapitalize="none" autocomplete="off" autocorrect="off"
+                        spellcheck="false">
+                </div>
+
+                <button type="button" id="fullscreen-mode-button" class="bar-icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrows-fullscreen"
+                        viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707m0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707m-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707" />
+                    </svg>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        class="bi bi-fullscreen-exit icon-disabled" viewBox="0 0 16 16">
+                        <path
+                            d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5M0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5m10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="touchpad"></div>
+
+        <div id="bottom-bar">
+            <div class="bar-container">
+                <input type="button" id="left-click-button-input" class="mouse-button-input">
+                <div id="mouse-icon" class="bar-icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-mouse2"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M3 5.188C3 2.341 5.22 0 8 0s5 2.342 5 5.188v5.625C13 13.658 10.78 16 8 16s-5-2.342-5-5.188V5.189zm4.5-4.155C5.541 1.289 4 3.035 4 5.188V5.5h3.5zm1 0V5.5H12v-.313c0-2.152-1.541-3.898-3.5-4.154M12 6.5H4v4.313C4 13.145 5.81 15 8 15s4-1.855 4-4.188z" />
+                    </svg>
+                </div>
+                <input type="button" id="right-click-button-input" class="mouse-button-input">
+            </div>
+        </div>
+
+
+        <!--modal-->
+        <div class="modal modal-disabled" id="settings-modal">
+            <div id="settings-button-close-container">
+                <button type="button" id="settings-button-close" class="bar-icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path
+                            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-content-container">
+                    <div class="modal-header">
+                        <h1 class="modal-title">Settings</h1>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-body-item">
+                            <h2 class="modal-body-item-title">Adjust mouse sensitivity multiplier</h2>
+                            <div class="modal-body-item-content">
+                                <button type="button" id="mouse-sensitivity-multiplier-minus"
+                                    class="settings-button">&minus;</button>
+                                <div id="mouse-sensitivity-multiplier" class="multiplier-number">1</div>
+                                <button type="button" id="mouse-sensitivity-multiplier-plus"
+                                    class="settings-button">&plus;</button>
+                            </div>
+                        </div>
+                        <div class="modal-body-item">
+                            <h2 class="modal-body-item-title">Adjust scroll sensitivity multiplier</h2>
+                            <div class="modal-body-item-content">
+                                <button type="button" id="scroll-sensitivity-multiplier-minus"
+                                    class="settings-button">&minus;</button>
+                                <div id="scroll-sensitivity-multiplier" class="multiplier-number">1</div>
+                                <button type="button" id="scroll-sensitivity-multiplier-plus"
+                                    class="settings-button">&plus;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="modal-footer-content">
+                        mobile-mkb v1.6.6 developed by Barnabas Bella
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="mouse-button-container">
-        <input type="button" name="left-click-button-input" id="left-click-button-input" class="mouse-button-input">
-        <input type="button" name="rigth-click-button-input" id="right-click-button-input" class="mouse-button-input">
-    </div>
-
-    <div id="ip-address-container">
-        <div id="ip-address-text">Please scan the following QR code on your phone:</div>
-        <div id="ip-address"></div>
+    <div id="desktop-elements">
+        <div id="ip-address-container">
+            <div id="ip-address-text">Scan this QR code on your phone:</div>
+            <div id="ip-address"></div>
+        </div>
     </div>
 
     <script>
-        const ipAddress = {{ IP_ADDRESS| tojson }}
-        const port = {{ PORT| tojson }}
-        const qrcode = new QRCode(document.getElementById("ip-address"), { text: `https://${ipAddress}:${port}`, colorLight: "#808080" });
-    </script>
+        const ipAddress = {{ IP_ADDRESS| tojson }};
+        const port = {{ PORT| tojson }};
+        const mouseMultiplier = {{ MOUSE_MULTIPLIER| tojson }};
+        const scrollMultiplier = {{ SCROLL_MULTIPLIER| tojson }};
+        document.getElementById("mouse-sensitivity-multiplier").innerHTML = mouseMultiplier;
+        document.getElementById("scroll-sensitivity-multiplier").innerHTML = scrollMultiplier;
+        const qrcode = new QRCode(document.getElementById("ip-address"), { text: `https://${ipAddress}:${port}`, colorLight: "#9E9E9E" });
     </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

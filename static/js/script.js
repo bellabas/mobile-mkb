@@ -1,9 +1,22 @@
 //=========================================== V A R I A B L E S ===========================================
 
+const fullscreenButton = document.getElementById("fullscreen-mode-button");
+
 const keyboard = document.getElementById("keyboard-input");
+const keyboardButton = document.getElementById("keyboard-input-button");
 const leftMouseButton = document.getElementById("left-click-button-input");
 const rightMouseButton = document.getElementById("right-click-button-input");
 const touchpad = document.getElementById("touchpad");
+
+const settingModal = document.getElementById("settings-modal");
+const openMenuButton = document.getElementById("settings-button-open");
+const closeMenuButton = document.getElementById("settings-button-close");
+const mouseSensitivityMinusButton = document.getElementById("mouse-sensitivity-multiplier-minus");
+const mouseSensitivityPlusButton = document.getElementById("mouse-sensitivity-multiplier-plus");
+const scrollSensitivityMinusButton = document.getElementById("scroll-sensitivity-multiplier-minus");
+const scrollSensitivityPlusButton = document.getElementById("scroll-sensitivity-multiplier-plus");
+const mouseSensitivityMultiplier = document.getElementById("mouse-sensitivity-multiplier");
+const scrollSensitivityMultiplier = document.getElementById("scroll-sensitivity-multiplier");
 
 let clickAllowed = true;
 
@@ -28,8 +41,114 @@ const postToServer = function (endpoint, data) {
 };
 
 
+//=========================================== S E T T I N G S ===========================================
+
+const handleToggleMenuButton = function (evt) {
+    if (settingModal.classList.contains("modal-disabled")) {
+        settingModal.classList.remove("modal-disabled");
+    }
+    else {
+        settingModal.classList.add("modal-disabled");
+    }
+};
+
+const handleMinusButton = function (evt, htmlValueElement, htmlMinusButtonElement, htmlPlusButtonElement) {
+    let currValue = parseInt(htmlValueElement.innerHTML);
+    if (currValue > 1) {
+        currValue -= 1;
+        htmlValueElement.innerHTML = currValue;
+        postToServer("/multiplier-change", { "mouseMultiplier": parseInt(mouseSensitivityMultiplier.innerHTML), "scrollMultiplier": parseInt(scrollSensitivityMultiplier.innerHTML) })
+    }
+    //button state managements
+    if (currValue === 1) {
+        htmlMinusButtonElement.classList.add("disabled-button");
+    }
+    if (currValue < 9) {
+        htmlPlusButtonElement.classList.remove("disabled-button");
+    }
+};
+
+const handlePlusButton = function (evt, htmlValueElement, htmlMinusButtonElement, htmlPlusButtonElement) {
+    let currValue = parseInt(htmlValueElement.innerHTML);
+    if (currValue < 9) {
+        currValue += 1;
+        htmlValueElement.innerHTML = currValue;
+        postToServer("/multiplier-change", { "mouseMultiplier": parseInt(mouseSensitivityMultiplier.innerHTML), "scrollMultiplier": parseInt(scrollSensitivityMultiplier.innerHTML) })
+    }
+    //button state managements
+    if (currValue === 9) {
+        htmlPlusButtonElement.classList.add("disabled-button");
+    }
+    if (currValue > 1) {
+        htmlMinusButtonElement.classList.remove("disabled-button");
+    }
+};
+
+const checkSettingsButtonAvailability = function (evt) {
+    const mouseValue = parseInt(mouseSensitivityMultiplier.innerHTML);
+    const scrollValue = parseInt(scrollSensitivityMultiplier.innerHTML);
+    if (mouseValue < 2) {
+        mouseSensitivityMinusButton.classList.add("disabled-button");
+    }
+    else if (mouseValue > 8) {
+        mouseSensitivityPlusButton.classList.add("disabled-button");
+    }
+    if (scrollValue < 2) {
+        scrollSensitivityMinusButton.classList.add("disabled-button");
+    }
+    else if (scrollValue > 8) {
+        scrollSensitivityPlusButton.classList.add("disabled-button");
+    }
+};
+
+//=========================================== M I S C =======================================================
+
+const switchButtonIcon = function (buttonElement) {
+    const svgIcons = buttonElement.getElementsByTagName("svg");
+    for (let i = 0; i < svgIcons.length; i++) {
+        const currIcon = svgIcons[i];
+        if (currIcon.classList.contains("icon-disabled")) {
+            currIcon.classList.remove("icon-disabled");
+        }
+        else {
+            currIcon.classList.add("icon-disabled");
+        }
+    }
+};
+
+
+//=========================================== F U L L S C R E E N ===========================================
+
+const handleFullscreenButtonClick = function (evt) {
+    if (!(document.fullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || document.webkitFullscreenElement)) {
+        const docElem = document.documentElement;
+        if (docElem.requestFullscreen) {
+            docElem.requestFullscreen();
+        } else if (docElem.webkitRequestFullscreen) {
+            /* Safari */
+            docElem.webkitRequestFullscreen();
+        } else if (docElem.msRequestFullscreen) {
+            /* IE11 */
+            docElem.msRequestFullscreen();
+        }
+
+    } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+    }
+};
+
+const handleFullscreenChange = function (evt) {
+    switchButtonIcon(fullscreenButton);
+};
+
+
 
 //=========================================== K E Y B O A R D ===========================================
+
+const handleKeyboardButtonClick = function (evt) {
+    keyboard.focus();
+    switchButtonIcon(keyboardButton);
+};
 
 const handleKeyDownIOS = function (evt) {
     //alert(`keydown full: ${evt.target.value}`);
@@ -83,6 +202,7 @@ const findDiff = function (pastStr, currentStr) {
 
 const handleKeyboardFocusOut = function (evt) {
     clickAllowed = false;
+    switchButtonIcon(keyboardButton);
 };
 
 
@@ -101,7 +221,8 @@ const handleTouchStart = function (evt) {
 
     pastCoordinates = startCoordinates;
 
-    removeKeyboardFocus();
+    //remove keyboard focus
+    keyboard.blur();
 };
 
 const handleTouchMove = function (evt) {
@@ -174,10 +295,6 @@ const resetTouchVariables = function () {
     startTouchId = null;
 };
 
-const removeKeyboardFocus = function () {
-    keyboard.blur();
-};
-
 
 
 //====================================== M O U S E  B U T T O N ======================================
@@ -210,9 +327,15 @@ const getOperatingSystem = function () {
 };
 
 const startup = function () {
+    window.addEventListener("load", checkSettingsButtonAvailability);
+    openMenuButton.addEventListener("click", handleToggleMenuButton);
+    closeMenuButton.addEventListener("click", handleToggleMenuButton);
+
+    fullscreenButton.addEventListener("click", handleFullscreenButtonClick);
+    document.documentElement.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    keyboardButton.addEventListener("click", handleKeyboardButtonClick);
     keyboard.addEventListener("focusout", handleKeyboardFocusOut);
-    leftMouseButton.addEventListener("click", handleLeftMouseButtonClick);
-    rightMouseButton.addEventListener("click", handleRightMouseButtonClick);
     const clientOS = getOperatingSystem();
     if (clientOS === "Android") {
         keyboard.addEventListener("focus", handleKeyboardFocusAndroid);
@@ -221,10 +344,18 @@ const startup = function () {
         keyboard.addEventListener("keydown", handleKeyDownIOS);
     }
 
+    leftMouseButton.addEventListener("click", handleLeftMouseButtonClick);
+    rightMouseButton.addEventListener("click", handleRightMouseButtonClick);
+
     touchpad.addEventListener("touchstart", handleTouchStart);
     touchpad.addEventListener("touchmove", handleTouchMove, { passive: false });
     touchpad.addEventListener("touchend", handleTouchEnd);
     touchpad.addEventListener("touchcancel", handleTouchCancel);
+
+    mouseSensitivityPlusButton.addEventListener("click", (evt) => { handlePlusButton(evt, mouseSensitivityMultiplier, mouseSensitivityMinusButton, mouseSensitivityPlusButton) });
+    mouseSensitivityMinusButton.addEventListener("click", (evt) => { handleMinusButton(evt, mouseSensitivityMultiplier, mouseSensitivityMinusButton, mouseSensitivityPlusButton) });
+    scrollSensitivityPlusButton.addEventListener("click", (evt) => { handlePlusButton(evt, scrollSensitivityMultiplier, scrollSensitivityMinusButton, scrollSensitivityPlusButton) });
+    scrollSensitivityMinusButton.addEventListener("click", (evt) => { handleMinusButton(evt, scrollSensitivityMultiplier, scrollSensitivityMinusButton, scrollSensitivityPlusButton) });
 };
 
 document.addEventListener("DOMContentLoaded", startup);
