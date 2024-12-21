@@ -9,6 +9,9 @@ Mobile-MKB allows users to control their PCs remotely using their mobile devices
 - sensitivity settings for scroll functionality and mouse movement
 - keyboard functionality
 
+## Python Version
+`Python 3.12.3`
+
 ## Usage
 Important: The PC and the mobile device must be on the same network for the app to work.
 
